@@ -1,0 +1,20 @@
+{
+  "name": "roadjams",
+  "version": "1.0.0",
+  "description": "Create a playlist that matches the length of your road trip using your group's Spotify preferences.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kburk1997/RoadJams.git"
+  },
+  "author": "Kathleen Burkhardt, Zhanwen \"Phil\" Chen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kburk1997/RoadJams/issues"
+  },
+  "homepage": "https://github.com/kburk1997/RoadJams#readme"
+}
