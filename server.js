@@ -113,7 +113,12 @@ app.get('/callback', function(req, res) {
             error: 'invalid_token'
           }));
       }
+
+      
+      
     });
+
+
   }
 });
 
@@ -140,6 +145,11 @@ app.get('/refresh_token', function(req, res) {
     }
   });
 });
+
+app.get('/my_preferences', function(req,res){
+
+});
+
 
 console.log('Listening on 8888');
 app.listen(8888);
