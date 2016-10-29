@@ -331,7 +331,7 @@
                 <a ng-click="like(track,currentUser)"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><br>{{track.numLikes}}</a>
               </td>
               <td>
-                <a><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><br>{{track.numDislikes}}</a>
+                <a ng-click="dislike(track,currentUser)"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><br>{{track.numDislikes}}</a>
               </td>
             </tr>
           </table>
@@ -355,6 +355,7 @@
               'numLikes':1,
               'likedBy':[{'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'}],
               'numDislikes':0,
+              'dislikedBy':[],
               'based_on_destination':false,
               'users_who_listen':[{'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'}]
             },
@@ -367,6 +368,7 @@
               'numLikes':0,
               'likedBy':[],
               'numDislikes':0,
+              'dislikedBy':[],
               'based_on_destination':true,
               'users_who_listen':[{'displayName':'Smol G. Pupper','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'},{'displayName':'Meme Doggo','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'}]
             },
@@ -379,15 +381,14 @@
               'numLikes':0,
               'likedBy':[],
               'numDislikes':0,
+              'dislikedBy':[],
               'based_on_destination':true,
               'users_who_listen':[]
             }
           ];
 
           $scope.like=function(track,user){
-            console.log(track);
             if(track.likedBy.length==0){
-              console.log("no likes");
               //Increment likes
               track.numLikes++;
               track.likedBy.push(user);
@@ -407,7 +408,7 @@
               var i;
               var liked=false;
               //Scan likedBy for user
-              for(i=0; i<arr.length; i++){
+              for(i=0; i<track.likedBy.length; i++){
                 console.log(track.likedBy[i]);
                 if(track.likedBy[i].displayName==user.displayName){
                   track.numLikes--;
@@ -424,6 +425,46 @@
               
             }
           };
+
+          $scope.dislike=function(track,user){
+            if(track.dislikedBy.length==0){
+              //Increment likes
+              track.numDislikes++;
+              track.dislikedBy.push(user);
+            }
+            else if (track.dislikedBy.length==1){
+              //Check if user already liked track
+              if(track.dislikedBy[0].displayName==user.displayName){
+                track.numDislikes--;
+                track.dislikedBy.pop();
+              }
+              else{
+                track.numDislikes++;
+                track.dislikedBy.push(user);
+              }
+            }
+            else{
+              var i;
+              var liked=false;
+              //Scan likedBy for user
+              for(i=0; i<track.dislikedBy.length; i++){
+                if(track.dislikedBy[i].displayName==user.displayName){
+                  track.numDislikes--;
+                  track.dislikedBy.splice(i, 1);
+                  liked=true;
+                }
+              }
+
+              //User has not liked track
+              if(!liked){
+                track.numDislikes++;
+                track.dislikedBy.push(user);
+              }
+              
+            }
+          };
+
+
       });
 </script>
   </body>
