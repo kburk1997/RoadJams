@@ -5,6 +5,9 @@
  *
  * For more information, read
  * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
+ *
+ * NOTE: Must have a PostgreSQL DB called 'track' running
+ *       and create an 'items' table with column definitions
  */
 
 var express = require('express'); // Express web server framework
@@ -12,10 +15,11 @@ var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 const pg = require('pg');
+const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/track';
 
 
-var client_id = 'xxxxxxxxxxxxxxxx'; // Your client id
-var client_secret = 'xxxxxxxxxxxxxxxxxxxx'; // Your secret
+var client_id = '4d8d3b35b0944cbbb34903443245b33c'; // Your client id
+var client_secret = 'fbfe652692fa4fb6a73c9153dc272c79'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback/'; // Your redirect uri
 
 /**
@@ -40,6 +44,8 @@ var app = express();
 app.use(express.static(__dirname + '/public'))
    .use(cookieParser());
 
+
+// Spotify Auth
 app.get('/login', function(req, res) {
 
   var state = generateRandomString(16);
@@ -148,10 +154,120 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
-app.get('/my_preferences', function(req,res){
+app.get('/my_preferences', function(req,res){});
 
+// Database operations
+app.get('/api/v1/tracks', (req, res, next) => {
+  const results = [];
+  // Get a Postgres client from the connection pool
+  pg.connect(connectionString, (err, client, done) => {
+    // Handle connection errors
+    if(err) {
+      done();
+      console.log(err);
+      return res.status(500).json({success: false, data: err});
+    }
+    // SQL Query > Select Data
+    const query = client.query('SELECT * FROM items ORDER BY id ASC;');
+    // Stream results back one row at a time
+    query.on('row', (row) => {
+      results.push(row);
+    });
+    // After all data is returned, close connection and return results
+    query.on('end', () => {
+      done();
+      return res.json(results);
+    });
+  });
 });
 
+app.post('/api/v1/tracks', (req, res, next) => {
+  const results = [];
+  // Grab data from http request
+  const data = {text: req.body.text, complete: false};
+  // Get a Postgres client from the connection pool
+  pg.connect(connectionString, (err, client, done) => {
+    // Handle connection errors
+    if(err) {
+      done();
+      console.log(err);
+      return res.status(500).json({success: false, data: err});
+    }
+    // SQL Query > Insert Data
+    client.query('INSERT INTO items(text, complete) values($1, $2)',
+    [data.text, data.complete]);
+    // SQL Query > Select Data
+    const query = client.query('SELECT * FROM items ORDER BY id ASC');
+    // Stream results back one row at a time
+    query.on('row', (row) => {
+      results.push(row);
+    });
+    // After all data is returned, close connection and return results
+    query.on('end', () => {
+      done();
+      return res.json(results);
+    });
+  });
+});
+
+app.put('/api/v1/tracks/:track_id', (req, res, next) => {
+  const results = [];
+  // Grab data from the URL parameters
+  const id = req.params.track_id;
+  // Grab data from http request
+  const data = {text: req.body.text, complete: req.body.complete};
+  // Get a Postgres client from the connection pool
+  pg.connect(connectionString, (err, client, done) => {
+    // Handle connection errors
+    if(err) {
+      done();
+      console.log(err);
+      return res.status(500).json({success: false, data: err});
+    }
+    // SQL Query > Update Data
+    client.query('UPDATE items SET text=($1), complete=($2) WHERE id=($3)',
+    [data.text, data.complete, id]);
+    // SQL Query > Select Data
+    const query = client.query("SELECT * FROM items ORDER BY id ASC");
+    // Stream results back one row at a time
+    query.on('row', (row) => {
+      results.push(row);
+    });
+    // After all data is returned, close connection and return results
+    query.on('end', function() {
+      done();
+      return res.json(results);
+    });
+  });
+});
+
+app.delete('/api/v1/tracks/:track_id', (req, res, next) => {
+  const results = [];
+  // Grab data from the URL parameters
+  const id = req.params.track_id;
+  // Get a Postgres client from the connection pool
+  pg.connect(connectionString, (err, client, done) => {
+    // Handle connection errors
+    if(err) {
+      done();
+      console.log(err);
+      return res.status(500).json({success: false, data: err});
+    }
+    // SQL Query > Delete Data
+    client.query('DELETE FROM items WHERE id=($1)', [id]);
+    // SQL Query > Select Data
+    var query = client.query('SELECT * FROM items ORDER BY id ASC');
+    // Stream results back one row at a time
+    query.on('row', (row) => {
+      results.push(row);
+    });
+    // After all data is returned, close connection and return results
+    query.on('end', () => {
+      done();
+      return res.json(results);
+    });
+  });
+});
 
 console.log('Listening on 8888');
 app.listen(8888);
