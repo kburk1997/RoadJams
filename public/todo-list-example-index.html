@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html ng-app="nodetrack">
+  <head>
+    <title>(Todo App) => {RoadJams}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="/stylesheets/style.css" media="screen">
+  </head>
+  <body ng-controller="mainController">
+    <div class="container">
+      <div class="header">
+        <h1>Track List</h1>
+        <hr>
+        <h1 class="lead">(Todo App) => {RoadJams}</h1>
+      </div>
+      <div class="auth-form">
+        <form>
+          <button type="submit" class="btn btn-primary btn-lg btn-block" ng-click="createtrack()">Login</button>
+        </form>
+      </div>
+      <div class="track-form">
+        <form>
+          <div class="form-group">
+            <input type="text" class="form-control input-lg" placeholder="Enter text..." ng-model="formData.text">
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg btn-block" ng-click="createtrack()">Add track</button>
+        </form>
+      </div>
+      <br>
+      <div class="track-list">
+        <ul ng-repeat="track in trackData">
+          <li><h3><input class="lead" type="checkbox" ng-click="deletetrack(track.id)">&nbsp;{{ track.text }}</h3></li><hr>
+        </ul>
+      </div>
+    </div>
+    <script src="//code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+    <script src="javascripts/app.js"></script>
+  </body>
+</html>
