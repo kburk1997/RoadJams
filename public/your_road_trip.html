@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css?family=Abel|Open+Sans" rel="stylesheet">
 
     <script src="https://use.fontawesome.com/d9b677c6f0.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 
     <style type="text/css">
       /*#login, #loggedin {
@@ -82,29 +83,25 @@
   </head>
 
   <body>
-    <div class="container">
+    <div class="container" ng-app="roadJamsApp" ng-controller="roadJamsCtrl">
       <div id="loggedin">
-        <h1 class="text-center">Welcome, Jane!</h1>
+        <h1 class="text-center">Welcome, {{firstName}}!</h1>
         <div class="user-info">
           <!--<h2>User Info</h2>-->
           <div class="media">
         <div class="pull-left">
-          <img class="media-object img-circle profile-picture" src="http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg" />
+          <img class="media-object img-circle profile-picture" src="{{profilePicture}}" />
         </div>
         <div class="media-body">
             <h3>Personal Details:</h3>
               <dl class="dl-horizontal">
-              <dt>Display name</dt><dd class="clearfix">Jane T. Fluffycorg</dd>
-              <dt>Email</dt><dd>givemebellyrubs@gmail.com</dd>
+              <dt>Display name</dt><dd class="clearfix">{{displayName}}</dd>
+              <dt>Email</dt><dd>{{email}}</dd>
               <dt>Spotify URI</dt><dd><a href="{{external_urls.spotify}}">{{external_urls.spotify}}</a></dd>
 
             <h3>Your Music Preferences:</h3>
-            <span class="label label-default">Alternative Rock</span>
-            <span class="label label-default">Post-Hardcore</span>
-            <span class="label label-default">Pop-Punk</span>
-            <span class="label label-default">Metalcore</span>
-            <span class="label label-default">Emo-pop</span>
-
+            <span ng-repeat="x in musicPreferences">
+            <span class="label label-default">{{x}}</span>&nbsp;</span>
 
           </dl>
         </div>
@@ -139,22 +136,21 @@
               </th>
             </tr>
 
-            <tr>
+            <tr ng-repeat="trip in trips">
               <td>
-                Boston, MA, USA
+                {{trip.start}}
               </td>
               <td>
-                New York, NY, USA
+                {{trip.end}}
               </td>
               <td>
-              3h 40m
+                {{trip.duration}}
               </td>
               <td>
-                March 10, 2017
+                {{trip.plannedDate}}
               </td>
               <td>
-                <a href="#">Phil Chen</a><br>
-                <a href="#">Krisztian Koves</a>
+                <span ng-repeat="user in trip.groupMembers"><a href="#">{{user}}</a><br></span>
               </td>
               <td>
                 <a href="trip_playlist.html"><i class="fa fa-music" aria-hidden="true"></i>
@@ -166,69 +162,6 @@
               </td>
               <td>
                 <a href="#"><i class="fa fa-trash" aria-hidden="true"></i> 
-                Delete</a>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                New York, NY, USA
-              </td>
-              <td>
-                Washington, DC, USA
-              </td>
-              <td>
-              4h 10m
-              </td>
-              <td>
-                March 12, 2017
-              </td>
-              <td>
-                <a href="#">Phil Chen</a><br>
-                <a href="#">Krisztian Koves</a>
-              </td>
-
-              <td>
-                <a href="#"><i class="fa fa-music" aria-hidden="true"></i>
-                Show</a>
-              </td>
-              <td>
-                <a href="#"><i class="fa fa-pencil" aria-hidden="true"></i>
-                Edit</a>
-              </td>
-              <td>
-                <a href="#"><i class="fa fa-trash" aria-hidden="true"></i>
-                Delete</a>
-              </td>
-            </tr>
-
-            <tr>
-              <td>
-                Washington, DC, USA
-              </td>
-              <td>
-                Charlotte, NC, USA
-              </td>
-              <td>
-              6h 11m
-              </td>
-              <td>
-                March 14, 2017
-              </td>
-              <td>
-                <a href="#">Phil Chen</a><br>
-                <a href="#">Krisztian Koves</a>
-              </td>
-
-              <td>
-                <a href="#"><i class="fa fa-music" aria-hidden="true"></i>
-                Show</a>
-              </td>
-              <td>
-                <a href="#"><i class="fa fa-pencil" aria-hidden="true"></i>
-                Edit</a>
-              </td>
-              <td>
-                <a href="#"><i class="fa fa-trash" aria-hidden="true"></i>
                 Delete</a>
               </td>
             </tr>
@@ -249,5 +182,18 @@
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+    <script>
+      var app = angular.module('roadJamsApp', []);
+      app.controller('roadJamsCtrl', function($scope) {
+          $scope.displayName= "Jane T Fluffycorg";
+          $scope.firstName="Jane";
+          $scope.profilePicture="http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg";
+          $scope.email="givemebellyrubs@gmail.com";
+          $scope.external_urls={'spotify':'https://play.spotify.com/user/kburk97'};
+          $scope.musicPreferences=['alternative rock', 'post-hardcore','pop-punk','metalcore','emo-pop'];
+          $scope.trips=[{'start':'Boston, MA, USA', 'end':'New York, NY, USA','duration':'3h40m','plannedDate':'March 10, 2017','groupMembers':['Phil Chen','Krisztian Koves']},{'start':'New York, NY, USA', 'end':'Washington, DC, USA','duration':'4h10m','plannedDate':'March 12, 2017','groupMembers':['Phil Chen','Krisztian Koves']},{'start':'Washington, DC, USA', 'end':'Charlotte, NC, USA','duration':'6h11m','plannedDate':'March 14, 2017','groupMembers':['Phil Chen','Krisztian Koves']}];
+      });
+</script>
   </body>
 </html>
