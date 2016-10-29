@@ -13,7 +13,7 @@
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 
     <style type="text/css">
@@ -222,7 +222,7 @@
                   </a>
                 </div>
                 <div class="media-body">
-                  <h4 class="media-heading">{{user.displayName}}</h4>
+                  <h4 class="media-heading">{{user.displayName}} <span ng-show="user.displayName==currentUser.displayName">(you)</span></h4>
                 </div>
               </li><br></span>
             </ul>
@@ -243,7 +243,7 @@
                   <div class="modal-body">
                     <h4>Copy the following link:</h4>
 
-                    <div class="well">http://roadjams.herokuapp.com/join/1</div>
+                    <div class="well">http://roadjams.herokuapp.com/join/{{trip.id}}</div>
                   </div>
 
                   <div class="modal-footer">
@@ -257,9 +257,9 @@
 
             <div id="trip-info">
             <h2><span class="hidden-xs">Trip </span>Info</h2>
-            <h4>Start:<span class="visible-xs"></span> Boston, MA</h4>
-            <h4>End:<span class="visible-xs"></span> New York, NY</h4>
-            <h4>Duration:<span class="visible-xs"></span> 3h 44m</h4>
+            <h4>Start:<span class="visible-xs"></span> {{trip.start}}</h4>
+            <h4>End:<span class="visible-xs"></span> {{trip.end}}</h4>
+            <h4>Duration:<span class="visible-xs"></span> {{trip.duration}}</h4>
           
           </div>
 
@@ -277,6 +277,7 @@
 
         <div class="col-xs-8 col-sm-8 col-md-9 col-lg-10">
         <div id="map" class="hidden-xs embed-responsive">
+        <!--TODO: either edit this map to be responsive or get rid of it-->
           <iframe class="embed-responsive-item" src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d3054377.4075042433!2d-75.43458080146392!3d41.61704314240938!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e6!4m5!1s0x89e3652d0d3d311b%3A0x787cbf240162e8a0!2sBoston%2C+MA!3m2!1d42.3600825!2d-71.0588801!4m5!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew+York%2C+NY!3m2!1d40.712783699999996!2d-74.0059413!5e0!3m2!1sen!2sus!4v1477707308604" width="100%" height="300" scrolling="no"frameborder="0" style="border:0;position:relative;" allowfullscreen>
           </iframe>
         </div>
@@ -306,51 +307,31 @@
               </th>
             </tr>
 
-            <tr>
+            <tr ng-repeat="track in tracks">
               <td> 
-                <img src="https://upload.wikimedia.org/wikipedia/en/b/bf/Instantgratification.jpg" class="album-image">
+                <img src="{{track.albumImage}}" class="album-image">
               </td>
               <td>
-                Death of a Strawberry
+                {{track.title}}
               </td>
               <td>
-                Dance Gavin Dance
+                {{track.artist}}
               </td>
               <td class="hidden-xs">
-                04:11
+                {{track.length}}
               </td>
               <td class="hidden-xs">
-                Jane T. Fluffycorg listens to this artist
+              <span ng-show="track.users_who_listen.length==1">
+                {{track.users_who_listen[0].displayName}} listens to this artist<br></span>
+              <span ng-show="track.users_who_listen.length>1">Group members who listen to this artist:<br>
+                <span ng-repeat="user in track.users_who_listen">&nbsp;{{user.displayName}}<br></span></span>
+                <span ng-show="track.based_on_destination">Based on trip destination</span>
               </td>
               <td>
-                <a><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><br>1</a>
+                <a ng-click="like(track,currentUser)"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><br>{{track.numLikes}}</a>
               </td>
               <td>
-                <a><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><br>0</a>
-              </td>
-            </tr>
-
-            <tr>
-              <td> 
-                <img src="https://images-na.ssl-images-amazon.com/images/I/71Zoa-908hL._SL1500_.jpg" class="album-image">
-              </td>
-              <td>
-                Theme from New York, New York
-              </td>
-              <td>
-                Frank Sinatra
-              </td>
-              <td class="hidden-xs">
-                03:24
-              </td>
-              <td class="hidden-xs">
-                Based on the destination of your trip
-              </td>
-              <td>
-                <a><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><br>1</a>
-              </td>
-              <td>
-                <a><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><br>0</a>
+                <a><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><br>{{track.numDislikes}}</a>
               </td>
             </tr>
           </table>
@@ -362,29 +343,87 @@
     <script>
       var app = angular.module('roadJamsApp', []);
       app.controller('roadJamsCtrl', function($scope) {
-          $scope.trip={'start':'Boston, MA, USA', 'end':'New York, NY, USA','duration':'3h40m','plannedDate':'March 10, 2017','groupMembers':[{'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'},{'displayName':'Smol G. Pupper','profilePicture':'https://gfp-nnw0orriao.netdna-ssl.com/wp-content/uploads/2016/07/Golden-Retriever-600x600.jpg'},{'displayName':'Meme Doggo','profilePicture':'http://petguide.com.vsassets.com/wp-content/uploads/2013/02/shiba-inu-1.jpg'},]};
+
+          $scope.currentUser={'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'};
+          $scope.trip={'id':1,'start':'Boston, MA, USA', 'end':'New York, NY, USA','duration':'3h40m','plannedDate':'March 10, 2017','groupMembers':[{'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'},{'displayName':'Smol G. Pupper','profilePicture':'https://gfp-nnw0orriao.netdna-ssl.com/wp-content/uploads/2016/07/Golden-Retriever-600x600.jpg'},{'displayName':'Meme Doggo','profilePicture':'http://petguide.com.vsassets.com/wp-content/uploads/2013/02/shiba-inu-1.jpg'},]};
           $scope.tracks=[
             {
-              'albumImage':'',
-              'title':'',
-              'artist':'',
-              'length':'',
+              'albumImage':'https://upload.wikimedia.org/wikipedia/en/b/bf/Instantgratification.jpg',
+              'title':'Death of a Strawberry',
+              'artist':'Dance Gavin Dance',
+              'length':'04:11',
               'numLikes':1,
+              'likedBy':[{'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'}],
               'numDislikes':0,
               'based_on_destination':false,
-              'users_who_listen':[],
+              'users_who_listen':[{'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'}]
             },
+
             {
-              'albumImage':'',
-              'title':'',
-              'artist':'',
-              'length':'',
-              'numLikes':1,
+              'albumImage':'http://fistintheair.com/wp-content/uploads/2016/01/artworks-000133687480-jxs5fm-t500x500.jpg',
+              'title':'New York City',
+              'artist':'The Chainsmokers',
+              'length':'03:51',
+              'numLikes':0,
+              'likedBy':[],
               'numDislikes':0,
-              'based_on_destination':false,
-              'users_who_listen':[],
+              'based_on_destination':true,
+              'users_who_listen':[{'displayName':'Smol G. Pupper','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'},{'displayName':'Meme Doggo','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'}]
+            },
+
+            {
+              'albumImage':'https://images-na.ssl-images-amazon.com/images/I/71Zoa-908hL._SL1500_.jpg',
+              'title':'Theme from New York, New York',
+              'artist':'Frank Sinatra',
+              'length':'03:24',
+              'numLikes':0,
+              'likedBy':[],
+              'numDislikes':0,
+              'based_on_destination':true,
+              'users_who_listen':[]
             }
           ];
+
+          $scope.like=function(track,user){
+            console.log(track);
+            if(track.likedBy.length==0){
+              console.log("no likes");
+              //Increment likes
+              track.numLikes++;
+              track.likedBy.push(user);
+            }
+            else if (track.likedBy.length==1){
+              //Check if user already liked track
+              if(track.likedBy[0].displayName==user.displayName){
+                track.numLikes--;
+                track.likedBy.pop();
+              }
+              else{
+                track.numLikes++;
+                track.likedBy.push(user);
+              }
+            }
+            else{
+              var i;
+              var liked=false;
+              //Scan likedBy for user
+              for(i=0; i<arr.length; i++){
+                console.log(track.likedBy[i]);
+                if(track.likedBy[i].displayName==user.displayName){
+                  track.numLikes--;
+                  track.likedBy.splice(i, 1);
+                  liked=true;
+                }
+              }
+
+              //User has not liked track
+              if(!liked){
+                track.numLikes++;
+                track.likedBy.push(user);
+              }
+              
+            }
+          };
       });
 </script>
   </body>
