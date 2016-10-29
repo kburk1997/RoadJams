@@ -14,21 +14,15 @@ var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
-const pg = require('pg');
-var SpotifyWebApi = require('spotify-web-api-node');
-const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/track';
+var https = require('https');
 
+const pg = require('pg');
+const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/track';
 
 var client_id = '4d8d3b35b0944cbbb34903443245b33c'; // Your client id
 var client_secret = 'fbfe652692fa4fb6a73c9153dc272c79'; // Your secret
 //This is obsolete(used as placeholder) -- replace with new one!
 var redirect_uri = 'http://localhost:8888/callback/'; // Your redirect uri
-
-var spotifyApi = new SpotifyWebApi({
-  clientId : client_id,
-  clientSecret : client_secret,
-  redirectUri : redirect_uri
-});
 
 /**
  * Generates a random string containing numbers and letters
@@ -60,7 +54,7 @@ app.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email';
+  var scope = 'user-top-read user-read-private user-read-email';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -117,6 +111,18 @@ app.get('/callback', function(req, res) {
           console.log(body);
         });
 
+        var options_2 = {
+          url: 'https://api.spotify.com/v1/me/top/artists',
+          headers: { 'Authorization': 'Bearer ' + access_token },
+          json: true
+        };
+
+        // use the access token to access the Spotify Web API
+        request.get(options_2, function(error, response, body) {
+          console.log(body);
+        });
+
+
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
           querystring.stringify({
@@ -129,12 +135,7 @@ app.get('/callback', function(req, res) {
             error: 'invalid_token'
           }));
       }
-
-
-
     });
-
-
   }
 });
 
