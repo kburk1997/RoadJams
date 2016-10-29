@@ -14,7 +14,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
-  
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
     <style type="text/css">
       /*#login, #loggedin {
         display: none;
@@ -205,7 +206,7 @@
   </head>
 
   <body>
-    <div class="container">
+    <div class="container" ng-app="roadJamsApp" ng-controller="roadJamsCtrl">
       <div id="loggedin">
 
         <h3><a href="your_road_trip.html"><i class="fa fa-chevron-left" aria-hidden="true"></i> Back</a></h3>
@@ -213,37 +214,17 @@
         <div id="users" class="col-xs-4 col-sm-4 col-md-3 col-lg-2">
           <h2 class="user-heading">Users</h2>
             <ul class="media-list user-list">
-              <li class="media">
+              <span ng-repeat="user in trip.groupMembers">
+               <li class="media">
                 <div class="media-left pull-left">
                   <a href="#">
-                    <img class="media-object img-circle" src="http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg" width="32">
+                    <img class="media-object img-circle" src="{{user.profilePicture}}" width="32">
                   </a>
                 </div>
                 <div class="media-body">
-                  <h4 class="media-heading">Jane T. Fluffycorg</h4>
+                  <h4 class="media-heading">{{user.displayName}}</h4>
                 </div>
-              </li><br>
-              <li class="media">
-                <div class="media-left pull-left">
-                  <a href="#">
-                    <img class="media-object img-circle" src="https://gfp-nnw0orriao.netdna-ssl.com/wp-content/uploads/2016/07/Golden-Retriever-600x600.jpg" width="32">
-                  </a>
-                </div>
-                <div class="media-body">
-                  <h4 class="media-heading">Smol G. Pupper</h4>
-                </div>
-              </li><br>
-
-              <li class="media">
-                <div class="media-left pull-left">
-                  <a href="#">
-                    <img class="media-object img-circle" src="http://petguide.com.vsassets.com/wp-content/uploads/2013/02/shiba-inu-1.jpg" width="32">
-                  </a>
-                </div>
-                <div class="media-body">
-                  <h4 class="media-heading">Meme Doggo</h4>
-                </div>
-              </li>
+              </li><br></span>
             </ul>
 
             <button class="btn btn-default btn-invite" data-toggle="modal" data-target="#invite-modal">
@@ -378,5 +359,33 @@
       </div>
     </div>
     
+    <script>
+      var app = angular.module('roadJamsApp', []);
+      app.controller('roadJamsCtrl', function($scope) {
+          $scope.trip={'start':'Boston, MA, USA', 'end':'New York, NY, USA','duration':'3h40m','plannedDate':'March 10, 2017','groupMembers':[{'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'},{'displayName':'Smol G. Pupper','profilePicture':'https://gfp-nnw0orriao.netdna-ssl.com/wp-content/uploads/2016/07/Golden-Retriever-600x600.jpg'},{'displayName':'Meme Doggo','profilePicture':'http://petguide.com.vsassets.com/wp-content/uploads/2013/02/shiba-inu-1.jpg'},]};
+          $scope.tracks=[
+            {
+              'albumImage':'',
+              'title':'',
+              'artist':'',
+              'length':'',
+              'numLikes':1,
+              'numDislikes':0,
+              'based_on_destination':false,
+              'users_who_listen':[],
+            },
+            {
+              'albumImage':'',
+              'title':'',
+              'artist':'',
+              'length':'',
+              'numLikes':1,
+              'numDislikes':0,
+              'based_on_destination':false,
+              'users_who_listen':[],
+            }
+          ];
+      });
+</script>
   </body>
 </html>
