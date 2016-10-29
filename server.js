@@ -11,6 +11,8 @@ var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
+const pg = require('pg');
+
 
 var client_id = 'xxxxxxxxxxxxxxxx'; // Your client id
 var client_secret = 'xxxxxxxxxxxxxxxxxxxx'; // Your secret
@@ -114,8 +116,8 @@ app.get('/callback', function(req, res) {
           }));
       }
 
-      
-      
+
+
     });
 
 
