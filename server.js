@@ -20,7 +20,7 @@ const pg = require('pg');
 const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/track';
 
 var client_id = '4d8d3b35b0944cbbb34903443245b33c'; // Your client id
-var client_secret = 'fbfe652692fa4fb6a73c9153dc272c79'; // Your secret
+var client_secret = 'xxxxxxxxxxxxxxxxxxxxxxxxxx'; // Your secret
 //This is obsolete(used as placeholder) -- replace with new one!
 var redirect_uri = 'http://localhost:8888/callback/'; // Your redirect uri
 
@@ -120,7 +120,38 @@ app.get('/callback', function(req, res) {
         // use the access token to access the Spotify Web API
         request.get(options_2, function(error, response, body) {
           console.log(body);
+          seeds=[];
+          var i;
+          //console.log(JSON.parse(body)['items']);
+          console.log(body['items']);
+          console.log(body['items'].length);
+          for (i=0; i<body['items'].length; i++){
+            seeds.push([body['items'][i].name,body['items'][i].id, body['items'][i].genres]);
+          }
+          console.log(seeds);
+          //TODO- do something with these seeds
         });
+
+        /*var options_3 = {
+          url: 'https://api.spotify.com/v1/me/top/tracks',
+          headers: { 'Authorization': 'Bearer ' + access_token },
+          json: true
+        };
+
+        request.get(options_3, function(error, response, body) {
+          console.log(body);
+          seeds=[];
+          var i;
+          //console.log(JSON.parse(body)['items']);
+          console.log(body['items']);
+          console.log(body['items'].length);
+          for (i=0; i<body['items'].length; i++){
+            console.log(body['items'][i].name);
+            seeds.push([body['items'][i].name,body['items'][i].id]);
+          }
+          console.log(seeds);
+          //TODO- do something with these seeds
+        });*/
 
 
         // we can also pass the token to the browser to make requests from there
