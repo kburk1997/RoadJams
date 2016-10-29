@@ -1,0 +1,276 @@
+<!doctype html>
+<html>
+  <head>
+      <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RoadJams</title>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Abel|Open+Sans" rel="stylesheet">
+
+    <script src="https://use.fontawesome.com/d9b677c6f0.js"></script>
+
+    <style type="text/css">
+      /*#login, #loggedin {
+        display: none;
+      }*/
+
+      h1,h2,h3,h4,h5,h6,th{
+        font-family: 'Abel',sans-serif;
+        color: #1b96fe;
+      }
+      .text-overflow {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 500px;
+      }
+      .container{
+        position: relative;
+        font-family: 'Open Sans',sans-serif;
+      }
+      #login{
+        position:fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+      }
+
+      .btn-login{
+        font-size: 24px;
+        background-color:  #1b96fe;
+        border-color: #1b96fe;
+      }
+
+      .logo{
+        width: 90%;
+      }
+
+      .profile-picture{
+        display: block;
+        width: 200px;
+      }
+      @media only screen and (max-width: 768px) {
+        .btn-login{
+          font-size: 14px;
+        }
+
+        .profile-picture{
+        display: block;
+        width: 150px;
+      }
+      }
+
+      @media only screen and (min-width: 1200px) {
+        .btn-login{
+          font-size: 30px;
+        }
+        .logo{
+        width: 70%;
+      }
+
+
+      .profile-picture{
+        display: block;
+        width: 250px;
+      }
+      }
+
+
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div id="loggedin">
+        <h1 class="text-center">Welcome, Jane!</h1>
+        <div class="user-info">
+          <!--<h2>User Info</h2>-->
+          <div class="media">
+        <div class="pull-left">
+          <img class="media-object img-circle profile-picture" src="http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg" />
+        </div>
+        <div class="media-body">
+            <h3>Personal Details:</h3>
+              <dl class="dl-horizontal">
+              <dt>Display name</dt><dd class="clearfix">Jane T. Fluffycorg</dd>
+              <dt>Email</dt><dd>givemebellyrubs@gmail.com</dd>
+              <dt>Spotify URI</dt><dd><a href="{{external_urls.spotify}}">{{external_urls.spotify}}</a></dd>
+
+            <h3>Your Music Preferences:</h3>
+            <span class="label label-default">Alternative Rock</span>
+            <span class="label label-default">Post-Hardcore</span>
+            <span class="label label-default">Pop-Punk</span>
+            <span class="label label-default">Metalcore</span>
+            <span class="label label-default">Emo-pop</span>
+
+
+          </dl>
+        </div>
+      </div>
+        </div>
+        <div class="roadtrips">
+          <h2 class="text-center">Your Road Trips</h2>
+
+          <table class="table">
+            <tr>
+              <th>
+                Start
+              </th>
+              <th>
+                End
+              </th>
+              <th>
+                Duration*
+              </th>
+              <th>
+                Planned Date
+              </th>
+              <th>
+                With
+              </th>
+              <th>
+                Actions
+              </th>
+              <th>
+              </th>
+              <th>
+              </th>
+            </tr>
+
+            <tr>
+              <td>
+                Boston, MA, USA
+              </td>
+              <td>
+                New York, NY, USA
+              </td>
+              <td>
+              3h 40m
+              </td>
+              <td>
+                March 10, 2017
+              </td>
+              <td>
+                <a href="#">Phil Chen</a><br>
+                <a href="#">Krisztian Koves</a>
+              </td>
+              <td>
+                <a href="#"><i class="fa fa-music" aria-hidden="true"></i>
+                Show</a>
+              </td>
+              <td>
+                <a href="#"><i class="fa fa-pencil" aria-hidden="true"></i>
+                Edit</a>
+              </td>
+              <td>
+                <a href="#"><i class="fa fa-trash" aria-hidden="true"></i> 
+                Delete</a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                New York, NY, USA
+              </td>
+              <td>
+                Washington, DC, USA
+              </td>
+              <td>
+              4h 10m
+              </td>
+              <td>
+                March 12, 2017
+              </td>
+              <td>
+                <a href="#">Phil Chen</a><br>
+                <a href="#">Krisztian Koves</a>
+              </td>
+
+              <td>
+                <a href="#"><i class="fa fa-music" aria-hidden="true"></i>
+                Show</a>
+              </td>
+              <td>
+                <a href="#"><i class="fa fa-pencil" aria-hidden="true"></i>
+                Edit</a>
+              </td>
+              <td>
+                <a href="#"><i class="fa fa-trash" aria-hidden="true"></i>
+                Delete</a>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                Washington, DC, USA
+              </td>
+              <td>
+                Charlotte, NC, USA
+              </td>
+              <td>
+              6h 11m
+              </td>
+              <td>
+                March 14, 2017
+              </td>
+              <td>
+                <a href="#">Phil Chen</a><br>
+                <a href="#">Krisztian Koves</a>
+              </td>
+
+              <td>
+                <a href="#"><i class="fa fa-music" aria-hidden="true"></i>
+                Show</a>
+              </td>
+              <td>
+                <a href="#"><i class="fa fa-pencil" aria-hidden="true"></i>
+                Edit</a>
+              </td>
+              <td>
+                <a href="#"><i class="fa fa-trash" aria-hidden="true"></i>
+                Delete</a>
+              </td>
+            </tr>
+          </table>
+
+          <button class="btn btn-default">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+            Create New Trip
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script id="user-profile-template" type="text/x-handlebars-template">
+      <h1>Welcome, {{display_name}}!</h1>
+      <div class="media">
+        <div class="pull-left">
+          <img class="media-object" width="150" src="{{images.0.url}}" />
+        </div>
+        <div class="media-body">
+          <dl class="dl-horizontal">
+            <dt>Display name</dt><dd class="clearfix">{{display_name}}</dd>
+            <dt>Id</dt><dd>{{id}}</dd>
+            <dt>Email</dt><dd>{{email}}</dd>
+            <dt>Spotify URI</dt><dd><a href="{{external_urls.spotify}}">{{external_urls.spotify}}</a></dd>
+            <dt>Link</dt><dd><a href="{{href}}">{{href}}</a></dd>
+            <dt>Profile Image</dt><dd class="clearfix"><a href="{{images.0.url}}">{{images.0.url}}</a></dd>
+            <dt>Country</dt><dd>{{country}}</dd>
+          </dl>
+        </div>
+      </div>
+    </script>
+
+    <script id="oauth-template" type="text/x-handlebars-template">
+      <h2>oAuth info</h2>
+      <dl class="dl-horizontal">
+        <dt>Access token</dt><dd class="text-overflow">{{access_token}}</dd>
+        <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}></dd>
+      </dl>
+    </script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+  </body>
+</html>
