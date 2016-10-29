@@ -18,8 +18,8 @@ const pg = require('pg');
 const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/track';
 
 
-var client_id = 'xxx'; // Your client id
-var client_secret = 'xxx'; // Your secret
+var client_id = '4d8d3b35b0944cbbb34903443245b33c'; // Your client id
+var client_secret = 'fbfe652692fa4fb6a73c9153dc272c79'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback/'; // Your redirect uri
 
 /**
