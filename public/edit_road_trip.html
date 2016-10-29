@@ -13,9 +13,14 @@
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
   <link rel="stylesheet" type="text/css" media="screen"
      href="http://tarruda.github.com/bootstrap-datetimepicker/assets/css/bootstrap-datetimepicker.min.css">
+
+
   </head>
     <style type="text/css">
       /*#login, #loggedin {
@@ -219,7 +224,7 @@
   </head>
 
   <body>
-    <div class="container">
+    <div class="container" ng-app="roadJamsApp" ng-controller="roadJamsCtrl">
       <div id="loggedin">
 
         <h3><a href="your_road_trip.html"><i class="fa fa-chevron-left" aria-hidden="true"></i> Back</a></h3>
@@ -227,39 +232,20 @@
         <div id="users" class="col-xs-4 col-sm-4 col-md-3 col-lg-2">
           <h2 class="user-heading">Users</h2>
             <ul class="media-list user-list">
+              <span ng-repeat="user in trip.groupMembers">
               <li class="media">
                 <div class="media-left pull-left">
                   <a href="#">
-                    <img class="media-object img-circle" src="http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg" width="32">
+                    <img class="media-object img-circle" src="{{user.profilePicture}}" width="32">
                   </a>
                 </div>
                 <div class="media-body">
-                  <h4 class="media-heading">Jane T. Fluffycorg (you)</h4>
-                </div>
-              </li><br>
-              <li class="media">
-                <div class="media-left pull-left">
-                  <a href="#">
-                    <img class="media-object img-circle" src="https://gfp-nnw0orriao.netdna-ssl.com/wp-content/uploads/2016/07/Golden-Retriever-600x600.jpg" width="32">
-                  </a>
-                </div>
-                <div class="media-body">
-                  <h4 class="media-heading">Smol G. Pupper</h4><a href="" class="text-danger"><i class="fa fa-times" aria-hidden="true"></i>
-                  <span class="hidden-xs">Remove from Trip</span></a>
-                </div>
-              </li><br>
+                  <h4 class="media-heading">{{user.displayName}} <span ng-show="user.displayName==currentUser.displayName">(you)</span></h4>
 
-              <li class="media">
-                <div class="media-left pull-left">
-                  <a href="#">
-                    <img class="media-object img-circle" src="http://petguide.com.vsassets.com/wp-content/uploads/2013/02/shiba-inu-1.jpg" width="32">
-                  </a>
-                </div>
-                <div class="media-body">
-                  <h4 class="media-heading">Meme Doggo</h4><a href="" class="text-danger"><i class="fa fa-times" aria-hidden="true"></i>
+                  <a href="" class="text-danger" ng-hide="user.displayName==currentUser.displayName" ng-click="remove(user, trip.groupMembers)"><i class="fa fa-times" aria-hidden="true"></i>
                   <span class="hidden-xs">Remove from Trip</span></a>
                 </div>
-              </li>
+              </li><br></span>
             </ul>
 
             <button class="btn btn-default btn-invite" data-toggle="modal" data-target="#invite-modal">
@@ -328,21 +314,21 @@
                   <label for="start-location" class="col-sm-2 control-label"><h3>Start</h3></label>
                 
               <div class="col-sm-10">
-                <input type="text" class="form-control input-lg" id="start-location" value="Boston, MA">
+                <input type="text" class="form-control input-lg" id="start-location" value="{{trip.start}}" ng-model="trip.start">
               </div>
             </div>
 
             <div class="form-group form-group-lg">
               <label for="end-location" class="col-sm-2 control-label"><h3>End</h3></label>
               <div class="col-sm-10">
-              <input type="text" class="form-control input-lg" id="end-location" value="New York, NY">
+              <input type="text" class="form-control input-lg" id="end-location" value="{{trip.end}}" ng-model="trip.end">
               </div>
             </div>
 
             <div class="form-group form-group-lg input-append" id="datetimepicker3">
               <label for="Duration" class="col-sm-2 control-label"><h3>Duration</h3></label>
               <div class="col-sm-10">
-              <input type="text" data-format="hh:mm:ss" class="form-control input-lg" id="duration" value="03:44:00">
+              <input type="text" data-format="hh:mm:ss" class="form-control input-lg" id="duration" value="{{trip.duration}}" ng-model="trip.duration">
               <span class="add-on">
                 <i data-time-icon="icon-time" data-date-icon="icon-calendar">
                 </i>
@@ -353,6 +339,9 @@
 
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
+              <!--NOTE: in this version changes are saved automatically-->
+
+              <!--when this button is clicked the database should reflect these changes-->
               <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>
             </div>
           </form>
@@ -397,59 +386,35 @@
               </th>
             </tr>
 
-            <tr>
+            <tr ng-repeat="track in tracks">
               <td> 
-                <img src="https://upload.wikimedia.org/wikipedia/en/b/bf/Instantgratification.jpg" class="album-image">
+                <img src="{{track.albumImage}}" class="album-image">
               </td>
               <td>
-                Death of a Strawberry
+                {{track.title}}
               </td>
               <td>
-                Dance Gavin Dance
+                {{track.artist}}
               </td>
               <td class="hidden-xs">
-                04:11
+                {{track.length}}
               </td>
               <td class="hidden-xs">
-                Jane T. Fluffycorg listens to this artist
+              <span ng-show="track.users_who_listen.length==1">
+                {{track.users_who_listen[0].displayName}} listens to this artist<br></span>
+              <span ng-show="track.users_who_listen.length>1">Group members who listen to this artist:<br>
+                <span ng-repeat="user in track.users_who_listen">&nbsp;{{user.displayName}}<br></span></span>
+                <span ng-show="track.based_on_destination">Based on trip destination</span>
               </td>
               <td>
-                <a><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><br>1</a>
+                <a ng-click="like(track,currentUser)"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><br>{{track.numLikes}}</a>
               </td>
               <td>
-                <a><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><br>0</a>
+                <a ng-click="dislike(track,currentUser)"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><br>{{track.numDislikes}}</a>
               </td>
 
               <td>
-              <a class="text-danger"><i class="fa fa-times" aria-hidden="true"></i></a>
-              </td>
-            </tr>
-
-            <tr>
-              <td> 
-                <img src="https://images-na.ssl-images-amazon.com/images/I/71Zoa-908hL._SL1500_.jpg" class="album-image">
-              </td>
-              <td>
-                Theme from New York, New York
-              </td>
-              <td>
-                Frank Sinatra
-              </td>
-              <td class="hidden-xs">
-                03:24
-              </td>
-              <td class="hidden-xs">
-                Based on the destination of your trip
-              </td>
-              <td>
-                <a><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><br>1</a>
-              </td>
-              <td>
-                <a><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><br>0</a>
-              </td>
-
-              <td>
-              <a class="text-danger"><i class="fa fa-times" aria-hidden="true"></i></a>
+              <a class="text-danger" ng-click="remove(track,tracks)"><i class="fa fa-times" aria-hidden="true"></i></a>
               </td>
             </tr>
           </table>
@@ -457,6 +422,148 @@
         
       </div>
     </div>
+
+    <script>
+      var app = angular.module('roadJamsApp', []);
+      app.controller('roadJamsCtrl', function($scope) {
+
+          $scope.currentUser={'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'};
+          $scope.trip={'id':1,'start':'Boston, MA, USA', 'end':'New York, NY, USA','duration':'3h40m','plannedDate':'March 10, 2017','groupMembers':[{'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'},{'displayName':'Smol G. Pupper','profilePicture':'https://gfp-nnw0orriao.netdna-ssl.com/wp-content/uploads/2016/07/Golden-Retriever-600x600.jpg'},{'displayName':'Meme Doggo','profilePicture':'http://petguide.com.vsassets.com/wp-content/uploads/2013/02/shiba-inu-1.jpg'},]};
+          $scope.tracks=[
+            {
+              'albumImage':'https://upload.wikimedia.org/wikipedia/en/b/bf/Instantgratification.jpg',
+              'title':'Death of a Strawberry',
+              'artist':'Dance Gavin Dance',
+              'length':'04:11',
+              'numLikes':1,
+              'likedBy':[{'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'}],
+              'numDislikes':0,
+              'dislikedBy':[],
+              'based_on_destination':false,
+              'users_who_listen':[{'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'}]
+            },
+
+            {
+              'albumImage':'http://fistintheair.com/wp-content/uploads/2016/01/artworks-000133687480-jxs5fm-t500x500.jpg',
+              'title':'New York City',
+              'artist':'The Chainsmokers',
+              'length':'03:51',
+              'numLikes':0,
+              'likedBy':[],
+              'numDislikes':0,
+              'dislikedBy':[],
+              'based_on_destination':true,
+              'users_who_listen':[{'displayName':'Smol G. Pupper','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'},{'displayName':'Meme Doggo','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'}]
+            },
+
+            {
+              'albumImage':'https://images-na.ssl-images-amazon.com/images/I/71Zoa-908hL._SL1500_.jpg',
+              'title':'Theme from New York, New York',
+              'artist':'Frank Sinatra',
+              'length':'03:24',
+              'numLikes':0,
+              'likedBy':[],
+              'numDislikes':0,
+              'dislikedBy':[],
+              'based_on_destination':true,
+              'users_who_listen':[]
+            }
+          ];
+
+          $scope.like=function(track,user){
+            if(track.likedBy.length==0){
+              //Increment likes
+              track.numLikes++;
+              track.likedBy.push(user);
+            }
+            else if (track.likedBy.length==1){
+              //Check if user already liked track
+              if(track.likedBy[0].displayName==user.displayName){
+                track.numLikes--;
+                track.likedBy.pop();
+              }
+              else{
+                track.numLikes++;
+                track.likedBy.push(user);
+              }
+            }
+            else{
+              var i;
+              var liked=false;
+              //Scan likedBy for user
+              for(i=0; i<track.likedBy.length; i++){
+                console.log(track.likedBy[i]);
+                if(track.likedBy[i].displayName==user.displayName){
+                  track.numLikes--;
+                  track.likedBy.splice(i, 1);
+                  liked=true;
+                }
+              }
+
+              //User has not liked track
+              if(!liked){
+                track.numLikes++;
+                track.likedBy.push(user);
+              }
+              
+            }
+          };
+
+          $scope.dislike=function(track,user){
+            if(track.dislikedBy.length==0){
+              //Increment likes
+              track.numDislikes++;
+              track.dislikedBy.push(user);
+            }
+            else if (track.dislikedBy.length==1){
+              //Check if user already liked track
+              if(track.dislikedBy[0].displayName==user.displayName){
+                track.numDislikes--;
+                track.dislikedBy.pop();
+              }
+              else{
+                track.numDislikes++;
+                track.dislikedBy.push(user);
+              }
+            }
+            else{
+              var i;
+              var liked=false;
+              //Scan likedBy for user
+              for(i=0; i<track.dislikedBy.length; i++){
+                if(track.dislikedBy[i].displayName==user.displayName){
+                  track.numDislikes--;
+                  track.dislikedBy.splice(i, 1);
+                  liked=true;
+                }
+              }
+
+              //User has not liked track
+              if(!liked){
+                track.numDislikes++;
+                track.dislikedBy.push(user);
+              }
+              
+            }
+          };
+
+          $scope.remove=function(track,tracks){
+            var remove=true;
+            var index=tracks.indexOf(track);
+            if (index==-1){
+              remove=false;
+            }
+            if (remove){
+              tracks.splice(index,1);
+            }
+            else{
+              console.log("ERROR: element not found");
+            }
+          }
+      });
+</script>
+
+
     <script type="text/javascript">
   $(function() {
     $('#datetimepicker3').datetimepicker({
