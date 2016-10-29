@@ -1,0 +1,468 @@
+<!doctype html>
+<html>
+  <head>
+      <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RoadJams - Your Profile</title>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Abel|Open+Sans" rel="stylesheet">
+
+    <script src="https://use.fontawesome.com/d9b677c6f0.js"></script>
+      <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+  <link rel="stylesheet" type="text/css" media="screen"
+     href="http://tarruda.github.com/bootstrap-datetimepicker/assets/css/bootstrap-datetimepicker.min.css">
+  </head>
+    <style type="text/css">
+      /*#login, #loggedin {
+        display: none;
+      }*/
+
+      h1,h2,h3,h4,h5,h6,th{
+        font-family: 'Abel',sans-serif;
+        color: #1b96fe;
+      }
+      .text-overflow {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 500px;
+      }
+      .container{
+        position: relative;
+        font-family: 'Open Sans',sans-serif;
+      }
+      #login{
+        position:fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+      }
+
+      .btn-login{
+        font-size: 24px;
+        background-color:  #1b96fe;
+        border-color: #1b96fe;
+      }
+
+      .logo{
+        width: 90%;
+      }
+
+      .profile-picture{
+        display: block;
+        width: 200px;
+      }
+
+      label{
+        vertical-align: top;
+      }
+
+      label h3{
+        margin: 0;
+      }
+      @media only screen and (max-width: 767px) {
+        .btn-login{
+          font-size: 14px;
+        }
+
+        .profile-picture{
+        display: block;
+        width: 150px;
+      }
+
+      /*.user-heading{
+        text-align: center;
+      }
+
+       .user-list{
+        text-align: center;
+      }
+
+      .media-object{
+        width: 64px;
+      }
+
+      .media{
+        position:absolute;
+        left: 50%;
+        margin-top: 64px;
+        transform: translate(-50%, 0%);
+        text-align: center;
+      }
+
+      .media:last-child{
+        margin-top: 128px;
+      }
+
+      #trip-info{
+        position:absolute;
+        left: 50%;
+        margin-top: 216px;
+        transform: translate(-50%, 0%);
+        text-align: center;
+      }
+
+      #playlist{
+        position:absolute;
+        left: 50%;
+        margin-top: 464px;
+        transform: translate(-50%, 0%);
+        text-align: center;
+      }
+
+      #spotify-link{
+        position:absolute;
+        left: 50%;
+        margin-top: 364px;
+        transform: translate(-50%, 0%);
+        text-align: center;
+      }
+
+      .btn-invite{
+        position:absolute;
+        left: 50%;
+        margin-top: 192px;
+        transform: translate(-50%, 0%);
+        text-align: center;
+      }*/
+        .album-image{
+          width: 24px !important;
+        }
+
+        .media-heading{
+          display: none;
+        }
+
+        .table{
+          font-size: 12px;
+        }
+
+        h1{
+          font-size: 30px;
+        }
+
+        h2{
+          font-size: 22px;
+        }
+
+        h4{
+          font-size: 16px;
+        }
+        .well{
+          font-size: 14px !important;
+        }
+      }
+
+      @media only screen and (min-width: 1200px) {
+        .btn-login{
+          font-size: 30px;
+        }
+        .logo{
+        width: 70%;
+      }
+
+
+      .profile-picture{
+        display: block;
+        width: 250px;
+      }
+
+
+      }
+
+      /*#users{
+        background-color: #9ad1fe;
+        color: #fff !important;
+        height: 100%;
+      }
+
+      #users h2{
+        font-family: 'Abel',sans-serif;
+      }*/
+
+      /*.user-list{
+        list-style: none;
+        padding: 0;
+        position: relative;
+        margin: 0;
+        width: 100%;
+      }*/
+
+      .media{
+        padding: 0;
+        display: table-cell;
+      }
+
+      .playlist-table tr td{
+        vertical-align: middle !important;
+      }
+
+      .album-image{
+        width: 48px;
+      }
+
+      .well{
+        font-size: 20px;
+      }
+
+      .col-sm-10{
+        height: 100%;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div id="loggedin">
+
+        <h3><a href="your_road_trip.html"><i class="fa fa-chevron-left" aria-hidden="true"></i> Back</a></h3>
+        <h1 class="text-center">Edit Road Trip</h1>
+        <div id="users" class="col-xs-4 col-sm-4 col-md-3 col-lg-2">
+          <h2 class="user-heading">Users</h2>
+            <ul class="media-list user-list">
+              <li class="media">
+                <div class="media-left pull-left">
+                  <a href="#">
+                    <img class="media-object img-circle" src="http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg" width="32">
+                  </a>
+                </div>
+                <div class="media-body">
+                  <h4 class="media-heading">Jane T. Fluffycorg (you)</h4>
+                </div>
+              </li><br>
+              <li class="media">
+                <div class="media-left pull-left">
+                  <a href="#">
+                    <img class="media-object img-circle" src="https://gfp-nnw0orriao.netdna-ssl.com/wp-content/uploads/2016/07/Golden-Retriever-600x600.jpg" width="32">
+                  </a>
+                </div>
+                <div class="media-body">
+                  <h4 class="media-heading">Smol G. Pupper</h4><a href="" class="text-danger"><i class="fa fa-times" aria-hidden="true"></i>
+                  <span class="hidden-xs">Remove from Trip</span></a>
+                </div>
+              </li><br>
+
+              <li class="media">
+                <div class="media-left pull-left">
+                  <a href="#">
+                    <img class="media-object img-circle" src="http://petguide.com.vsassets.com/wp-content/uploads/2013/02/shiba-inu-1.jpg" width="32">
+                  </a>
+                </div>
+                <div class="media-body">
+                  <h4 class="media-heading">Meme Doggo</h4><a href="" class="text-danger"><i class="fa fa-times" aria-hidden="true"></i>
+                  <span class="hidden-xs">Remove from Trip</span></a>
+                </div>
+              </li>
+            </ul>
+
+            <button class="btn btn-default btn-invite" data-toggle="modal" data-target="#invite-modal">
+              <i class="fa fa-plus" aria-hidden="true"></i>
+              <span class="hidden-xs">Invite Friends</span>
+            </button>
+
+            <div class="modal fade" id="invite-modal" role="dialog">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h2 class="modal-title" id="invite-modal-label">Invite Friends</h2>
+                  </div>
+
+                  <div class="modal-body">
+                    <h4>Copy the following link:</h4>
+
+                    <div class="well">http://roadjams.herokuapp.com/join/1</div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Copy to Clipboard</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <!--<div id="trip-info">
+            <h2><span class="hidden-xs">Trip </span>Info</h2>
+            <h4>Start:<span class="visible-xs"></span> Boston, MA</h4>
+            <h4>End:<span class="visible-xs"></span> New York, NY</h4>
+            <h4>Duration:<span class="visible-xs"></span> 3h 44m</h4>
+          
+          </div>
+
+          <div id="spotify-link">
+            <h2>
+              Ready<span class="hidden-xs">
+                 to Go</span>?
+            </h2>
+            <button class="btn btn-primary btn-spotify">
+              <i class="fa fa-spotify" aria-hidden="true"></i> 
+              <span class="hidden-xs">Open in Spotify</span>
+            </button>
+          </div>-->
+        </div>
+
+        <div class="col-xs-8 col-sm-8 col-md-9 col-lg-10">
+
+        <!--<div id="map" class="hidden-xs embed-responsive">
+          <iframe class="embed-responsive-item" src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d3054377.4075042433!2d-75.43458080146392!3d41.61704314240938!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e6!4m5!1s0x89e3652d0d3d311b%3A0x787cbf240162e8a0!2sBoston%2C+MA!3m2!1d42.3600825!2d-71.0588801!4m5!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew+York%2C+NY!3m2!1d40.712783699999996!2d-74.0059413!5e0!3m2!1sen!2sus!4v1477707308604" width="100%" height="300" scrolling="no"frameborder="0" style="border:0;position:relative;" allowfullscreen>
+          </iframe>
+        </div>-->
+
+        <div id="edit-trip-info">
+          <h2 class="text-center">
+            Trip Info
+
+          </h2>
+          <form class="form-horizontal">
+            <div class="form-group form-group-lg">
+                
+                  <label for="start-location" class="col-sm-2 control-label"><h3>Start</h3></label>
+                
+              <div class="col-sm-10">
+                <input type="text" class="form-control input-lg" id="start-location" value="Boston, MA">
+              </div>
+            </div>
+
+            <div class="form-group form-group-lg">
+              <label for="end-location" class="col-sm-2 control-label"><h3>End</h3></label>
+              <div class="col-sm-10">
+              <input type="text" class="form-control input-lg" id="end-location" value="New York, NY">
+              </div>
+            </div>
+
+            <div class="form-group form-group-lg input-append" id="datetimepicker3">
+              <label for="Duration" class="col-sm-2 control-label"><h3>Duration</h3></label>
+              <div class="col-sm-10">
+              <input type="text" data-format="hh:mm:ss" class="form-control input-lg" id="duration" value="03:44:00">
+              <span class="add-on">
+                <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                </i>
+              </span>
+              </div>
+            </div>
+            </div>
+
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>
+            </div>
+          </form>
+        </div>
+        <div id="playlist">
+          <h2 class="text-center">Playlist</h2>
+
+          <div class="playlist-options">
+            <button class="btn btn-primary"><i class="fa fa-random" aria-hidden="true"></i> Shuffle</button>
+
+            <button class="btn btn-default"><i class="fa fa-refresh" aria-hidden="true"></i> Remake Playlist</button>
+          </div>
+
+          <br>
+
+
+          <table class="table playlist-table">
+            <tr>
+              <th>
+              </th>
+              <th>
+                Title
+              </th>
+              <th>
+                Artist
+              </th>
+              <th class="hidden-xs">
+                Length
+              </th>
+              <th class="hidden-xs">
+                
+              </th>
+              <th >
+                
+              </th>
+              <th>
+                
+              </th>
+
+              <th>
+                
+              </th>
+            </tr>
+
+            <tr>
+              <td> 
+                <img src="https://upload.wikimedia.org/wikipedia/en/b/bf/Instantgratification.jpg" class="album-image">
+              </td>
+              <td>
+                Death of a Strawberry
+              </td>
+              <td>
+                Dance Gavin Dance
+              </td>
+              <td class="hidden-xs">
+                04:11
+              </td>
+              <td class="hidden-xs">
+                Jane T. Fluffycorg listens to this artist
+              </td>
+              <td>
+                <a><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><br>1</a>
+              </td>
+              <td>
+                <a><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><br>0</a>
+              </td>
+
+              <td>
+              <a class="text-danger"><i class="fa fa-times" aria-hidden="true"></i></a>
+              </td>
+            </tr>
+
+            <tr>
+              <td> 
+                <img src="https://images-na.ssl-images-amazon.com/images/I/71Zoa-908hL._SL1500_.jpg" class="album-image">
+              </td>
+              <td>
+                Theme from New York, New York
+              </td>
+              <td>
+                Frank Sinatra
+              </td>
+              <td class="hidden-xs">
+                03:24
+              </td>
+              <td class="hidden-xs">
+                Based on the destination of your trip
+              </td>
+              <td>
+                <a><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><br>1</a>
+              </td>
+              <td>
+                <a><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><br>0</a>
+              </td>
+
+              <td>
+              <a class="text-danger"><i class="fa fa-times" aria-hidden="true"></i></a>
+              </td>
+            </tr>
+          </table>
+        </div>
+        
+      </div>
+    </div>
+    <script type="text/javascript">
+  $(function() {
+    $('#datetimepicker3').datetimepicker({
+      pickDate: false
+    });
+  });
+</script>
+  </body>
+</html>
