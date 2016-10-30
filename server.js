@@ -25,7 +25,7 @@ var client_secret = 'fbfe652692fa4fb6a73c9153dc272c79'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback/'; // Your redirect uri
 
 
-var group={};
+var group=[];
 /**
  * Generates a random string containing numbers and letters
  * @param  {number} length The length of the string
@@ -146,27 +146,61 @@ app.get('/callback', function(req, res) {
           user['artists']=artist_seeds;
           console.log(user);
 
+          group.push(user);
 
+          console.log(group);
+
+          console.log(group.length);
+
+            // TODO
+          var shuffle = function(tracks) {
+            return 1;
+          };
+
+          var getRecommendedTracksFromArtists = function(artist_seeds) {
+            var artist_ids=[];
+
+            var i;
+            for(i=0;i<artist_seeds.length;i++){
+              var id=artist_seeds[i][1];
+              artist_ids.push(id);
+            }
+            console.log(artist_ids);
+
+            //Call API here
+            for(i=0;i<artist_ids.length;i++){
+              var options_recommended_tracks = {
+                url: 'https://api.spotify.com/v1/recommendations?seed_artists='+artist_ids[i],
+                headers: { 'Authorization': 'Bearer ' + access_token },
+                json: true
+              };
+
+              request.get(options_recommended_tracks, function(error, response, body){
+                console.log(body);
+              });
+            }
+            
+
+            return 1;
+          };
+
+          var playlist = [];
+
+          console.log(group.length);
+
+          for (var i = 0; i<group.length; i++) {
+            
+
+            var artist_seeds = group[i].artists;
+            console.log(artist_seeds);
+            group[i]['recommendedTracks'] = getRecommendedTracksFromArtists(artist_seeds);
+            playlist.push(group[i]['recommendedTracks']);
+          }
+
+          shuffle(playlist);
         });
 
-        // TODO
-        var shuffle = function(tracks) {
-          return 1;
-        };
-
-        var getRecommendedTracksFromArtists = function(artist_seeds) {
-          return 1;
-        };
-
-        var playlist = {};
-
-        for (var i = 0; i<group.length; i++) {
-          var artist_seeds = group[i].artists;
-          group[i]['recommendedTracks'] = getRecommendedTracksFromArtists(artist_seeds);
-          playlist.append(group[i]['recommendedTracks']);
-        }
-
-        shuffle(playlist);
+        
 
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
