@@ -20,32 +20,40 @@ var callback = function(tracks) {
     // Grab
     var table = jQuery('#playlist-table');
 
-    // Build tr
-    var tr = jQuery('<tr></tr>');
+    
 
     // for each in data track in tracks
     for (var i=0; i<tracks.length; i++) {
-
+        // Build tr
+        var tr = jQuery('<tr></tr>');
         var art_img = jQuery('<img>');
         art_img.src = tracks[i].album_art;
 
         var td_art = jQuery('<td></td>');
         td_art.append(art_img);
+        tr.append(td_art);
 
         var td_track = jQuery('<td></td>');
         td_track.text = tracks[i].track_name;
+        tr.append(td_track);
 
         var td_artist = jQuery('<td></td>');
         td_artist.text = tracks[i].artist_name;
+        tr.append(td_artist);
 
         var td_duration = jQuery('<td></td>');
         td_duration.text = tracks[i].duration;
+        tr.append(td_duration);
 
         var td_like_button  = jQuery('<td></td>');
         td_like_button.text = tracks[i].numLikes;
+        tr.append(td_like_button);
 
         var td_dislike_button  = jQuery('<td></td>');
         td_dislike_button.text = tracks[i].numDislikes;
+        tr.append(td_dislike_button);
+
+        table.append(tr);
     }
     //table.append();
 }
