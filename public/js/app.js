@@ -47,9 +47,9 @@ socket.on('playlist', function(tracks){
 
             //td_duration.text = tracks[i][j].duration;
             var seconds=tracks[i][j].duration/1000;
-            console.log();
-            console.log();
-            console.log(seconds);
+            //console.log();
+            //console.log();
+            //console.log(seconds);
             var minutes=Math.floor(seconds/60);
             var remainder=Math.floor(seconds %60);
             if(Math.floor(remainder/10)==0){
@@ -66,7 +66,7 @@ socket.on('playlist', function(tracks){
             tr.append(td_dislike_button);
             //console.log(tr);
             table.append(tr);
-            console.log(table);
+            //console.log(table);
         }
         
     }

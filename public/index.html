@@ -9,6 +9,9 @@
     <link href="https://fonts.googleapis.com/css?family=Abel|Open+Sans" rel="stylesheet">
 
     <script src="https://use.fontawesome.com/d9b677c6f0.js"></script>
+      <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
         <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
  <script src="js/app.js"></script>
 
@@ -261,7 +264,7 @@ Log in with Spotify</a>
         </div>
         <div id="oauth">
         </div>
-        <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
+        <!--<button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>-->
 
         <div id="trip">
 
@@ -313,9 +316,9 @@ Log in with Spotify</a>
 
             <div id="trip-info">
             <h2><span class="hidden-xs">Trip </span>Info</h2>
-            <!-- <h4>Start:<span class="visible-xs"></span> {{trip.start}}</h4>
-            <h4>End:<span class="visible-xs"></span> {{trip.end}}</h4>
-            <h4>Duration:<span class="visible-xs"></span> {{trip.duration}}</h4> -->
+             <h4>Start:<span class="visible-xs"></span> Boston, MA</h4>
+            <h4>End:<span class="visible-xs"></span>New York, NY</h4>
+            <h4>Duration:<span class="visible-xs"></span> 3h 44m</h4> 
 
           </div>
 
@@ -457,17 +460,17 @@ Log in with Spotify</a>
         } else {
           if (access_token) {
             // render oauth info
-            oauthPlaceholder.innerHTML = oauthTemplate({
+            /*oauthPlaceholder.innerHTML = oauthTemplate({
               access_token: access_token,
               refresh_token: refresh_token
-            });
+            });*/
             $.ajax({
                 url: 'https://api.spotify.com/v1/me',
                 headers: {
                   'Authorization': 'Bearer ' + access_token
                 },
                 success: function(response) {
-                  userProfilePlaceholder.innerHTML = userProfileTemplate(response);
+                  //userProfilePlaceholder.innerHTML = userProfileTemplate(response);
                   $('#login').hide();
                   $('#loggedin').show();
                 }
@@ -485,10 +488,10 @@ Log in with Spotify</a>
               }
             }).done(function(data) {
               access_token = data.access_token;
-              oauthPlaceholder.innerHTML = oauthTemplate({
+              /*oauthPlaceholder.innerHTML = oauthTemplate({
                 access_token: access_token,
                 refresh_token: refresh_token
-              });
+              });*/
             });
           }, false);
         }

@@ -239,7 +239,7 @@ app.get('/callback', function(req, res) {
 
                     tracks.push(track);
 
-                    console.log(track);
+                    //console.log(track);
                   }
                 }
                 //console.log(body.tracks.length);
@@ -277,7 +277,9 @@ app.get('/callback', function(req, res) {
             //io.sockets=connections;
             io.emit("playlist",playlist);
             console.log('created playlist');
-            console.log(playlist);
+            //console.log(playlist);
+
+            console.log(group);
           });
           
           
