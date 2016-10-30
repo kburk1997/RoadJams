@@ -19,15 +19,31 @@ var https = require('https');
 const pg = require('pg');
 const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/track';
 
+var spotifyWebAPI = require('spotify-web-api-node'); // Spotify API wrapper
+
 var client_id = '4d8d3b35b0944cbbb34903443245b33c'; // Your client id
 var client_secret = 'fbfe652692fa4fb6a73c9153dc272c79'; // Your secret
 //This is obsolete(used as placeholder) -- replace with new one!
 var redirect_uri = 'http://localhost:8888/callback/'; // Your redirect uri
 
+// The central part of our app: the Spotify API
+var spotifyAPI = new spotifyWebAPI({
+  clientId: '4d8d3b35b0944cbbb34903443245b33c',
+  clientSecret: '09b69549471042ffab84d77dc1b1adc2',
+  redirectUri: 'http://localhost:8888/callback/'
+});
+
 
 var group=[];
+
+
 /**
- * Generates a random string containing numbers and letters
+ * Generates a random string containing numbers and letters.
+ *
+ * Used for generating a state variable, which is validated
+ * when it comes back from the Spotify API, to check for
+ * CSRF (Cross-Site Request Forgery)
+ *
  * @param  {number} length The length of the string
  * @return {string} The generated string
  */
@@ -48,25 +64,31 @@ var app = express();
 app.use(express.static(__dirname + '/public'))
    .use(cookieParser());
 
-
+/*******************/
+/**  LOGIN ROUTE  **/
+/*******************/
 // Spotify Auth
 app.get('/login', function(req, res) {
+  // Variables needed for Spotify authorization
+  var scopes = ['user-read-private', 'user-read-email', 'user-top-read'],
+      state = generateRandomString(16);
 
-  var state = generateRandomString(16);
+  // Set a browser cookie with state string; this is checked later against
+  // state string we get from Spotify API, to prevent CSRF attacks
   res.cookie(stateKey, state);
 
-  // your application requests authorization
-  var scope = 'user-top-read user-read-private user-read-email';
-  res.redirect('https://accounts.spotify.com/authorize?' +
-    querystring.stringify({
-      response_type: 'code',
-      client_id: client_id,
-      scope: scope,
-      redirect_uri: redirect_uri,
-      state: state
-    }));
+  // Generate an authorization URL
+  var authorizeURL = spotifyAPI.createAuthorizeURL(scopes, state);
+  // console.log(authorizeURL);
+
+  // Redirect to authorization URL, so user can authorize
+  // our app to connect to their Spotify account
+  res.redirect(authorizeURL);
 });
 
+/**********************/
+/* API CALLBACK ROUTE */
+/**********************/
 app.get('/callback', function(req, res) {
 
   // your application requests refresh and access tokens
@@ -239,6 +261,10 @@ app.get('/callback', function(req, res) {
             refresh_token: refresh_token
           }));
       } else {
+        console.log("\nError during authorization; Error", response.statusCode + ":", response.statusMessage);
+        // console.log("Full response:\n", response);
+        // console.log("\nFull error:\n", error);
+
         res.redirect('/#' +
           querystring.stringify({
             error: 'invalid_token'
