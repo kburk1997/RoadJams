@@ -20,7 +20,7 @@ socket.on('disconnect', function() {
 
 socket.on('playlist', function(tracks){
     console.log("a client received a playlist");
-    var table = $('playlist-table');
+    var table = $('.playlist-table');
     console.log(table);
     // for each in data track in tracks
     for (var i=0; i<tracks.length; i++) {
