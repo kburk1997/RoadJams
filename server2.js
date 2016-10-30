@@ -10,8 +10,6 @@
  *       and create an 'items' table with column definitions
  */
 
-var port = process.env.PORT || 8888;
-
 var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var querystring = require('querystring');
@@ -28,13 +26,13 @@ var spotifyWebAPI = require('spotify-web-api-node'); // Spotify API wrapper
 var client_id = '4d8d3b35b0944cbbb34903443245b33c'; // Your client id
 var client_secret = '09b69549471042ffab84d77dc1b1adc2'; // Your secret
 //This is obsolete(used as placeholder) -- replace with new one!
-var redirect_uri = 'https://roadjams.herokuapp.com/callback/'; // Your redirect uri
+var redirect_uri = 'http://localhost:8888/callback/'; // Your redirect uri
 
 // The central part of our app: the Spotify API
 var spotifyAPI = new spotifyWebAPI({
-  clientId: client_id,
-  clientSecret: client_secret,
-  redirectUri: redirect_uri
+  clientId: '4d8d3b35b0944cbbb34903443245b33c',
+  clientSecret: '09b69549471042ffab84d77dc1b1adc2',
+  redirectUri: 'http://localhost:8888/callback/'
 });
 
 
@@ -68,8 +66,8 @@ var stateKey = 'spotify_auth_state';
 var app = express();
 var socket = require('socket.io');
 
-console.log('Listening on ' + port);
-var server=app.listen(port);
+console.log('Listening on 8888');
+var server=app.listen(8888);
 
 var io=socket.listen(server);
 
@@ -245,11 +243,11 @@ app.get('/callback', function(req, res) {
                   }
                 }
                 //console.log(body.tracks.length);
-
+                
 
                 //console.log(tracks);
 
-
+                
               });
             }
 
@@ -257,10 +255,10 @@ app.get('/callback', function(req, res) {
 
           return tracks;
 
-
+            
           };
 
-
+          
 
           //console.log(group.length);
 
@@ -283,8 +281,8 @@ app.get('/callback', function(req, res) {
 
             console.log(group);
           });
-
-
+          
+          
           //shuffle(playlist);
         });
 
@@ -448,3 +446,4 @@ app.delete('/api/v1/tracks/:track_id', (req, res, next) => {
     });
   });
 });
+
