@@ -26,7 +26,7 @@ const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/
 var spotifyWebAPI = require('spotify-web-api-node'); // Spotify API wrapper
 
 var client_id = '4d8d3b35b0944cbbb34903443245b33c'; // Your client id
-var client_secret = '09b69549471042ffab84d77dc1b1adc2'; // Your secret
+var client_secret = process.env.CLIENT_SECRET; // Your secret
 //This is obsolete(used as placeholder) -- replace with new one!
 var redirect_uri = 'https://roadjams.herokuapp.com/callback/'; // Your redirect uri
 
