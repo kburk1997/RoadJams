@@ -18,54 +18,55 @@ socket.on('disconnect', function() {
     console.log('Disconnected from server');
 });
 
-socket.on('playlist', function(playlist){
-    console.log('received playlist!');
-    //console.log(playlist);
-    for(var i=0; i<playlist.length;i++){
-        console.log(playlist[i]);
+socket.on('playlist', function(tracks){
+    console.log("a client received a playlist");
+    var table = $('playlist-table');
+    console.log(table);
+    // for each in data track in tracks
+    for (var i=0; i<tracks.length; i++) {
+        //console.log(tracks[i]);
+
+        for(var j=0; j<tracks[i].length;j++){
+            //console.log(tracks[i][j])
+            // Build tr
+            var tr = $('<tr></tr>');
+            var art_img = $('<img>');
+            art_img.src = tracks[i][j]['album_art'];
+
+            var td_art = $('<td></td>');
+            td_art.append(art_img);
+            tr.append(td_art);
+
+            var td_track = $('<td></td>');
+            td_track.text = tracks[i][j].track_name;
+            tr.append(td_track);
+
+            var td_artist = $('<td></td>');
+            td_artist.text = tracks[i][j].artist_name;
+            tr.append(td_artist);
+
+            var td_duration = $('<td></td>');
+            td_duration.text = tracks[i][j].duration;
+            tr.append(td_duration);
+
+            var td_like_button  = $('<td></td>');
+            td_like_button.text = tracks[i][j].numLikes;
+            tr.append(td_like_button);
+
+            var td_dislike_button  = $('<td></td>');
+            td_dislike_button.text = tracks[i][j].numDislikes;
+            tr.append(td_dislike_button);
+
+            table.append(tr);
+        }
+        
     }
 });
 
 var callback = function(tracks) {
 
     // Grab
-    var table = jQuery('#playlist-table');
 
-    
-
-    // for each in data track in tracks
-    for (var i=0; i<tracks.length; i++) {
-        // Build tr
-        var tr = jQuery('<tr></tr>');
-        var art_img = jQuery('<img>');
-        art_img.src = tracks[i].album_art;
-
-        var td_art = jQuery('<td></td>');
-        td_art.append(art_img);
-        tr.append(td_art);
-
-        var td_track = jQuery('<td></td>');
-        td_track.text = tracks[i].track_name;
-        tr.append(td_track);
-
-        var td_artist = jQuery('<td></td>');
-        td_artist.text = tracks[i].artist_name;
-        tr.append(td_artist);
-
-        var td_duration = jQuery('<td></td>');
-        td_duration.text = tracks[i].duration;
-        tr.append(td_duration);
-
-        var td_like_button  = jQuery('<td></td>');
-        td_like_button.text = tracks[i].numLikes;
-        tr.append(td_like_button);
-
-        var td_dislike_button  = jQuery('<td></td>');
-        td_dislike_button.text = tracks[i].numDislikes;
-        tr.append(td_dislike_button);
-
-        table.append(tr);
-    }
     //table.append();
 }
 

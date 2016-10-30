@@ -24,7 +24,7 @@ const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/
 var spotifyWebAPI = require('spotify-web-api-node'); // Spotify API wrapper
 
 var client_id = '4d8d3b35b0944cbbb34903443245b33c'; // Your client id
-var client_secret = 'fbfe652692fa4fb6a73c9153dc272c79'; // Your secret
+var client_secret = '09b69549471042ffab84d77dc1b1adc2'; // Your secret
 //This is obsolete(used as placeholder) -- replace with new one!
 var redirect_uri = 'http://localhost:8888/callback/'; // Your redirect uri
 
@@ -71,12 +71,7 @@ var server=app.listen(8888);
 
 var io=socket.listen(server);
 
-io.on('connection', function(socket){
-  console.log("connect");
-  io.emit("connect");
-  //connections.push(socket);
-  //io.sockets=connections;
-});
+
 
 app.use(express.static(__dirname + '/public'))
    .use(cookieParser());
@@ -209,7 +204,7 @@ app.get('/callback', function(req, res) {
             //Call API here
             for(i=0;i<artist_ids.length;i++){
               var options_recommended_tracks = {
-                url: 'https://api.spotify.com/v1/recommendations?seed_artists='+artist_ids[i]+'&limit=5',
+                url: 'https://api.spotify.com/v1/recommendations?seed_artists='+artist_ids[i]+'&limit=1',
                 headers: { 'Authorization': 'Bearer ' + access_token },
                 json: true
               };
@@ -218,39 +213,49 @@ app.get('/callback', function(req, res) {
                 //console.log(body);
                 var j;
                 //console.log(body.tracks.length);
-                for (j=0;j<body.tracks.length;j++){
-                  //console.log(body.tracks[j]);
-                  //console.log(body.tracks[j].album);
-                  var album_art=body.tracks[j].album.images[2].url;
-                  //console.log(album_art);
-                  var artist_name=body.tracks[j].artists[0].name;
-                  //console.log(artist_name);
-                  var duration=body.tracks[j].duration_ms;
-                  //console.log(duration);
-                  var track_name=body.tracks[j].name;
-                  //console.log(track_name);
 
-                  var track={
-                    'album_art':album_art,
-                    'artist_name':artist_name,
-                    'duration': duration,
-                    'track_name':track_name,
-                    'numLikes':0,
-                    'numDislikes':0,
-                    'likedBy':[],
-                  };
+                if(body.tracks){
+                  for (j=0;j<body.tracks.length;j++){
+                    //console.log(body.tracks[j]);
+                    //console.log(body.tracks[j].album);
+                    var album_art=body.tracks[j].album.images[2].url;
+                    //console.log(album_art);
+                    var artist_name=body.tracks[j].artists[0].name;
+                    //console.log(artist_name);
+                    var duration=body.tracks[j].duration_ms;
+                    //console.log(duration);
+                    var track_name=body.tracks[j].name;
+                    //console.log(track_name);
 
-                  tracks.push(track);
+                    var track={
+                      'album_art':album_art,
+                      'artist_name':artist_name,
+                      'duration': duration,
+                      'track_name':track_name,
+                      'numLikes':0,
+                      'numDislikes':0,
+                      'likedBy':[],
+                    };
 
-                  //console.log(track);
+                    tracks.push(track);
+
+                    console.log(track);
+                  }
                 }
+                //console.log(body.tracks.length);
+                
 
                 //console.log(tracks);
+
+                
               });
             }
 
+          //console.log(tracks);
 
-            return 1;
+          return tracks;
+
+            
           };
 
           
@@ -260,12 +265,21 @@ app.get('/callback', function(req, res) {
           for (var i = 0; i<group.length; i++) {
             var artist_seeds = group[i].artists;
             //console.log(artist_seeds);
+            //console.log(getRecommendedTracksFromArtists(artist_seeds));
             group[i]['recommendedTracks'] = getRecommendedTracksFromArtists(artist_seeds);
             playlist.push(group[i]['recommendedTracks']);
           }
-          io.emit("playlist",playlist);
-          console.log('created playlist');
-          //console.log(playlist);
+
+          io.on('connection', function(socket){
+            console.log("connect");
+            io.emit("connect");
+            //connections.push(socket);
+            //io.sockets=connections;
+            io.emit("playlist",playlist);
+            console.log('created playlist');
+            console.log(playlist);
+          });
+          
           
           //shuffle(playlist);
         });
