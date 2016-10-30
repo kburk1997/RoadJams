@@ -218,11 +218,11 @@
                <li class="media">
                 <div class="media-left pull-left">
                   <a href="#">
-                    <img class="media-object img-circle" src="{{user.profilePicture}}" width="32">
+                    <!-- <img class="media-object img-circle" src="{{user.profilePicture}}" width="32"> -->
                   </a>
                 </div>
                 <div class="media-body">
-                  <h4 class="media-heading">{{user.displayName}} <span ng-show="user.displayName==currentUser.displayName">(you)</span></h4>
+                  <!-- <h4 class="media-heading">{{user.displayName}} <span ng-show="user.displayName==currentUser.displayName">(you)</span></h4> -->
                 </div>
               </li><br></span>
             </ul>
@@ -243,7 +243,7 @@
                   <div class="modal-body">
                     <h4>Copy the following link:</h4>
 
-                    <div class="well">http://roadjams.herokuapp.com/join/{{trip.id}}</div>
+                    <!-- <div class="well">http://roadjams.herokuapp.com/join/{{trip.id}}</div> -->
                   </div>
 
                   <div class="modal-footer">
@@ -257,10 +257,10 @@
 
             <div id="trip-info">
             <h2><span class="hidden-xs">Trip </span>Info</h2>
-            <h4>Start:<span class="visible-xs"></span> {{trip.start}}</h4>
+            <!-- <h4>Start:<span class="visible-xs"></span> {{trip.start}}</h4>
             <h4>End:<span class="visible-xs"></span> {{trip.end}}</h4>
-            <h4>Duration:<span class="visible-xs"></span> {{trip.duration}}</h4>
-          
+            <h4>Duration:<span class="visible-xs"></span> {{trip.duration}}</h4> -->
+
           </div>
 
           <div id="spotify-link">
@@ -269,7 +269,7 @@
                  to Go</span>?
             </h2>
             <button class="btn btn-primary btn-spotify">
-              <i class="fa fa-spotify" aria-hidden="true"></i> 
+              <i class="fa fa-spotify" aria-hidden="true"></i>
               <span class="hidden-xs">Open in Spotify</span>
             </button>
           </div>
@@ -297,18 +297,18 @@
                 Length
               </th>
               <th class="hidden-xs">
-                
+
               </th>
               <th >
-                
+
               </th>
               <th>
-                
+
               </th>
             </tr>
 
-            <tr ng-repeat="track in tracks">
-              <td> 
+            <!-- <tr ng-repeat="track in tracks">
+              <td>
                 <img src="{{track.albumImage}}" class="album-image">
               </td>
               <td>
@@ -333,139 +333,143 @@
               <td>
                 <a ng-click="dislike(track,currentUser)"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><br>{{track.numDislikes}}</a>
               </td>
-            </tr>
+            </tr> -->
           </table>
         </div>
-        
+
       </div>
     </div>
-    
+
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="js/app.js"></script>
+
     <script>
-      var app = angular.module('roadJamsApp', []);
-      app.controller('roadJamsCtrl', function($scope) {
-
-          $scope.currentUser={'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'};
-          $scope.trip={'id':1,'start':'Boston, MA, USA', 'end':'New York, NY, USA','duration':'3h40m','plannedDate':'March 10, 2017','groupMembers':[{'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'},{'displayName':'Smol G. Pupper','profilePicture':'https://gfp-nnw0orriao.netdna-ssl.com/wp-content/uploads/2016/07/Golden-Retriever-600x600.jpg'},{'displayName':'Meme Doggo','profilePicture':'http://petguide.com.vsassets.com/wp-content/uploads/2013/02/shiba-inu-1.jpg'},]};
-          $scope.tracks=[
-            {
-              'albumImage':'https://upload.wikimedia.org/wikipedia/en/b/bf/Instantgratification.jpg',
-              'title':'Death of a Strawberry',
-              'artist':'Dance Gavin Dance',
-              'length':'04:11',
-              'numLikes':1,
-              'likedBy':[{'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'}],
-              'numDislikes':0,
-              'dislikedBy':[],
-              'based_on_destination':false,
-              'users_who_listen':[{'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'}]
-            },
-
-            {
-              'albumImage':'http://fistintheair.com/wp-content/uploads/2016/01/artworks-000133687480-jxs5fm-t500x500.jpg',
-              'title':'New York City',
-              'artist':'The Chainsmokers',
-              'length':'03:51',
-              'numLikes':0,
-              'likedBy':[],
-              'numDislikes':0,
-              'dislikedBy':[],
-              'based_on_destination':true,
-              'users_who_listen':[{'displayName':'Smol G. Pupper','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'},{'displayName':'Meme Doggo','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'}]
-            },
-
-            {
-              'albumImage':'https://images-na.ssl-images-amazon.com/images/I/71Zoa-908hL._SL1500_.jpg',
-              'title':'Theme from New York, New York',
-              'artist':'Frank Sinatra',
-              'length':'03:24',
-              'numLikes':0,
-              'likedBy':[],
-              'numDislikes':0,
-              'dislikedBy':[],
-              'based_on_destination':true,
-              'users_who_listen':[]
-            }
-          ];
-
-          $scope.like=function(track,user){
-            if(track.likedBy.length==0){
-              //Increment likes
-              track.numLikes++;
-              track.likedBy.push(user);
-            }
-            else if (track.likedBy.length==1){
-              //Check if user already liked track
-              if(track.likedBy[0].displayName==user.displayName){
-                track.numLikes--;
-                track.likedBy.pop();
-              }
-              else{
-                track.numLikes++;
-                track.likedBy.push(user);
-              }
-            }
-            else{
-              var i;
-              var liked=false;
-              //Scan likedBy for user
-              for(i=0; i<track.likedBy.length; i++){
-                console.log(track.likedBy[i]);
-                if(track.likedBy[i].displayName==user.displayName){
-                  track.numLikes--;
-                  track.likedBy.splice(i, 1);
-                  liked=true;
-                }
-              }
-
-              //User has not liked track
-              if(!liked){
-                track.numLikes++;
-                track.likedBy.push(user);
-              }
-              
-            }
-          };
-
-          $scope.dislike=function(track,user){
-            if(track.dislikedBy.length==0){
-              //Increment likes
-              track.numDislikes++;
-              track.dislikedBy.push(user);
-            }
-            else if (track.dislikedBy.length==1){
-              //Check if user already liked track
-              if(track.dislikedBy[0].displayName==user.displayName){
-                track.numDislikes--;
-                track.dislikedBy.pop();
-              }
-              else{
-                track.numDislikes++;
-                track.dislikedBy.push(user);
-              }
-            }
-            else{
-              var i;
-              var liked=false;
-              //Scan likedBy for user
-              for(i=0; i<track.dislikedBy.length; i++){
-                if(track.dislikedBy[i].displayName==user.displayName){
-                  track.numDislikes--;
-                  track.dislikedBy.splice(i, 1);
-                  liked=true;
-                }
-              }
-
-              //User has not liked track
-              if(!liked){
-                track.numDislikes++;
-                track.dislikedBy.push(user);
-              }
-              
-            }
-          };
-
-
-      });
+      // var app = angular.module('roadJamsApp', []);
+      // app.controller('roadJamsCtrl', function($scope) {
+      //
+      //     $scope.currentUser={'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'};
+      //     $scope.trip={'id':1,'start':'Boston, MA, USA', 'end':'New York, NY, USA','duration':'3h40m','plannedDate':'March 10, 2017','groupMembers':[{'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'},{'displayName':'Smol G. Pupper','profilePicture':'https://gfp-nnw0orriao.netdna-ssl.com/wp-content/uploads/2016/07/Golden-Retriever-600x600.jpg'},{'displayName':'Meme Doggo','profilePicture':'http://petguide.com.vsassets.com/wp-content/uploads/2013/02/shiba-inu-1.jpg'},]};
+      //     $scope.tracks=[
+      //       {
+      //         'albumImage':'https://upload.wikimedia.org/wikipedia/en/b/bf/Instantgratification.jpg',
+      //         'title':'Death of a Strawberry',
+      //         'artist':'Dance Gavin Dance',
+      //         'length':'04:11',
+      //         'numLikes':1,
+      //         'likedBy':[{'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'}],
+      //         'numDislikes':0,
+      //         'dislikedBy':[],
+      //         'based_on_destination':false,
+      //         'users_who_listen':[{'displayName':'Jane T. Fluffycorg','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'}]
+      //       },
+      //
+      //       {
+      //         'albumImage':'http://fistintheair.com/wp-content/uploads/2016/01/artworks-000133687480-jxs5fm-t500x500.jpg',
+      //         'title':'New York City',
+      //         'artist':'The Chainsmokers',
+      //         'length':'03:51',
+      //         'numLikes':0,
+      //         'likedBy':[],
+      //         'numDislikes':0,
+      //         'dislikedBy':[],
+      //         'based_on_destination':true,
+      //         'users_who_listen':[{'displayName':'Smol G. Pupper','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'},{'displayName':'Meme Doggo','profilePicture':'http://dg4l0lhura2yj.cloudfront.net/static/images/dogster/breeds/pembroke_welsh_corgi.jpg'}]
+      //       },
+      //
+      //       {
+      //         'albumImage':'https://images-na.ssl-images-amazon.com/images/I/71Zoa-908hL._SL1500_.jpg',
+      //         'title':'Theme from New York, New York',
+      //         'artist':'Frank Sinatra',
+      //         'length':'03:24',
+      //         'numLikes':0,
+      //         'likedBy':[],
+      //         'numDislikes':0,
+      //         'dislikedBy':[],
+      //         'based_on_destination':true,
+      //         'users_who_listen':[]
+      //       }
+      //     ];
+      //
+      //     $scope.like=function(track,user){
+      //       if(track.likedBy.length==0){
+      //         //Increment likes
+      //         track.numLikes++;
+      //         track.likedBy.push(user);
+      //       }
+      //       else if (track.likedBy.length==1){
+      //         //Check if user already liked track
+      //         if(track.likedBy[0].displayName==user.displayName){
+      //           track.numLikes--;
+      //           track.likedBy.pop();
+      //         }
+      //         else{
+      //           track.numLikes++;
+      //           track.likedBy.push(user);
+      //         }
+      //       }
+      //       else{
+      //         var i;
+      //         var liked=false;
+      //         //Scan likedBy for user
+      //         for(i=0; i<track.likedBy.length; i++){
+      //           console.log(track.likedBy[i]);
+      //           if(track.likedBy[i].displayName==user.displayName){
+      //             track.numLikes--;
+      //             track.likedBy.splice(i, 1);
+      //             liked=true;
+      //           }
+      //         }
+      //
+      //         //User has not liked track
+      //         if(!liked){
+      //           track.numLikes++;
+      //           track.likedBy.push(user);
+      //         }
+      //
+      //       }
+      //     };
+      //
+      //     $scope.dislike=function(track,user){
+      //       if(track.dislikedBy.length==0){
+      //         //Increment likes
+      //         track.numDislikes++;
+      //         track.dislikedBy.push(user);
+      //       }
+      //       else if (track.dislikedBy.length==1){
+      //         //Check if user already liked track
+      //         if(track.dislikedBy[0].displayName==user.displayName){
+      //           track.numDislikes--;
+      //           track.dislikedBy.pop();
+      //         }
+      //         else{
+      //           track.numDislikes++;
+      //           track.dislikedBy.push(user);
+      //         }
+      //       }
+      //       else{
+      //         var i;
+      //         var liked=false;
+      //         //Scan likedBy for user
+      //         for(i=0; i<track.dislikedBy.length; i++){
+      //           if(track.dislikedBy[i].displayName==user.displayName){
+      //             track.numDislikes--;
+      //             track.dislikedBy.splice(i, 1);
+      //             liked=true;
+      //           }
+      //         }
+      //
+      //         //User has not liked track
+      //         if(!liked){
+      //           track.numDislikes++;
+      //           track.dislikedBy.push(user);
+      //         }
+      //
+      //       }
+      //     };
+      //
+      //
+      // });
 </script>
   </body>
 </html>

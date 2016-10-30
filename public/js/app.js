@@ -1,43 +1,101 @@
-// NOTE: Need to change to fix html
 
-angular.module('nodetrack', [])
-.controller('mainController', ($scope, $http) => {
-  $scope.formData = {};
-  $scope.trackData = {};
-  // Get all tracks
-  $http.get('/api/v1/tracks')
-  .success((data) => {
-    $scope.trackData = data;
-    console.log(data);
-  })
-  .error((error) => {
-    console.log('Error: ' + error);
-  });
-  // Create a new track
-  $scope.createtrack = () => {
-    $http.post('/api/v1/tracks', $scope.formData)
-    .success((data) => {
-      $scope.formData = {};
-      $scope.trackData = data;
-      console.log(data);
-    })
-    .error((error) => {
-      console.log('Error: ' + error);
-    });
-  };
-  // Delete a track
-  $scope.deletetrack = (trackID) => {
-    $http.delete('/api/v1/tracks/' + trackID)
-    .success((data) => {
-      $scope.trackData = data;
-      console.log(data);
-    })
-    .error((data) => {
-      console.log('Error: ' + data);
-    });
-  };
-  // Create a new track
-  $scope.login = () => {
+/*
+ * Client side operations.
+ * TODO: 1. Start socket.io connection to server
+ *       2. Build <li>s
+ */
 
-  };
+var socket = io();
+
+socket.on('connect', function() {
+    console.log('Connected to server');
 });
+
+socket.on('disconnect', function() {
+    console.log('Disconnected from server');
+});
+
+var callback = function(tracks) {
+
+    // Grab
+    var table = jQuery('#playlist-table');
+
+    // Build tr
+    var tr = jQuery('<tr></tr>');
+
+    // for each in data track in tracks
+    for (var i=0; i<tracks.length; i++) {
+
+        var art_img = jQuery('<img>');
+        art_img.src = tracks[i].album_art;
+
+        var td_art = jQuery('<td></td>');
+        td_art.append(art_img);
+
+        var td_track = jQuery('<td></td>');
+        td_track.text = tracks[i].track_name;
+
+        var td_artist = jQuery('<td></td>');
+        td_artist.text = tracks[i].artist_name;
+
+        var td_duration = jQuery('<td></td>');
+        td_duration.text = tracks[i].duration;
+
+        var td_like_button  = jQuery('<td></td>');
+        td_like_button.text = tracks[i].numLikes;
+
+        var td_dislike_button  = jQuery('<td></td>');
+        td_dislike_button.text = tracks[i].numDislikes;
+    }
+    //table.append();
+}
+
+// socket.on('newMessage', function(message) {
+//     console.log('newMessage', message);
+//     var li = jQuery('<li></li>');
+//     li.text(`${message.from}: ${message.text}`);
+//
+//     jQuery('#messages').append(li);
+// });
+//
+// socket.on('newLocationMessage', function(message) {
+//     var li = jQuery('<li></li>');
+//     // _blank opens new tab
+//     var a = jQuery('<a href="_blank">My current location</a>');
+//
+//     // jQuery methods are escaped. Prevent malicious injections
+//     li.text(`${message.from}: `);
+//     a.attr('href', message.url);
+//     li.append(a);
+//     jQuery('#messages').append(li);
+// });
+//
+// var locationButton = jQuery('#send-location');
+// locationButton.on('click', function () {
+//     if (!navigator.geolocation) {
+//         return alert('Geolocation not supported by your browser');
+//     }
+//
+//     // Success, Fail/Error Handler
+//     navigator.geolocation.getCurrentPosition(function (position) {
+//         socket.emit('createLocationMessage', {
+//             latitude: position.coords.latitude,
+//             longitude: position.coords.longitude
+//         })
+//     },
+//     function () {
+//         alert('Unable to fetch location')
+//     });
+// });
+//
+// jQuery('#message-form').on('submit', function (e) {
+//     // Prevent submit's default refresh
+//     e.preventDefault();
+//
+//     socket.emit('createMessage', {
+//         from: 'User',
+//         text: jQuery('[name=message]').val()
+//     }, function () {
+//         jQuery('[name=message]').val('');
+//     });
+// });
