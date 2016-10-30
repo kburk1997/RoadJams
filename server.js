@@ -146,7 +146,7 @@ app.get('/callback', function(req, res) {
           user['artists']=artist_seeds;
           console.log(user);
 
-          if()
+          
         });
 
         
