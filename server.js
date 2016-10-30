@@ -195,7 +195,10 @@ app.get('/callback', function(req, res) {
                     'album_art':album_art,
                     'artist_name':artist_name,
                     'duration': duration,
-                    'track_name':track_name
+                    'track_name':track_name,
+                    'numLikes':0,
+                    'numDislikes':0,
+                    'likedBy':[],
                   };
 
                   tracks.push(track);
@@ -206,7 +209,7 @@ app.get('/callback', function(req, res) {
                 console.log(tracks);
               });
             }
-            
+
 
             return 1;
           };
@@ -216,7 +219,7 @@ app.get('/callback', function(req, res) {
           console.log(group.length);
 
           for (var i = 0; i<group.length; i++) {
-            
+
 
             var artist_seeds = group[i].artists;
             console.log(artist_seeds);
@@ -227,7 +230,7 @@ app.get('/callback', function(req, res) {
           shuffle(playlist);
         });
 
-        
+
 
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
