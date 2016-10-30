@@ -146,32 +146,27 @@ app.get('/callback', function(req, res) {
           user['artists']=artist_seeds;
           console.log(user);
 
-          
+
         });
 
-        
-
-        /*var options_3 = {
-          url: 'https://api.spotify.com/v1/me/top/tracks',
-          headers: { 'Authorization': 'Bearer ' + access_token },
-          json: true
+        // TODO
+        var shuffle = function(tracks) {
+          return 1;
         };
 
-        request.get(options_3, function(error, response, body) {
-          console.log(body);
-          seeds=[];
-          var i;
-          //console.log(JSON.parse(body)['items']);
-          console.log(body['items']);
-          console.log(body['items'].length);
-          for (i=0; i<body['items'].length; i++){
-            console.log(body['items'][i].name);
-            seeds.push([body['items'][i].name,body['items'][i].id]);
-          }
-          console.log(seeds);
-          //TODO- do something with these seeds
-        });*/
+        var getRecommendedTracksFromArtists = function(artist_seeds) {
+          return 1;
+        };
 
+        var playlist = {};
+
+        for (var i = 0; i<group.length; i++) {
+          var artist_seeds = group[i].artists;
+          group[i]['recommendedTracks'] = getRecommendedTracksFromArtists(artist_seeds);
+          playlist.append(group[i]['recommendedTracks']);
+        }
+
+        shuffle(playlist);
 
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
