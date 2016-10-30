@@ -159,7 +159,7 @@ app.get('/callback', function(req, res) {
 
           var getRecommendedTracksFromArtists = function(artist_seeds) {
             var artist_ids=[];
-
+            var tracks=[];
             var i;
             for(i=0;i<artist_seeds.length;i++){
               var id=artist_seeds[i][1];
@@ -170,13 +170,40 @@ app.get('/callback', function(req, res) {
             //Call API here
             for(i=0;i<artist_ids.length;i++){
               var options_recommended_tracks = {
-                url: 'https://api.spotify.com/v1/recommendations?seed_artists='+artist_ids[i],
+                url: 'https://api.spotify.com/v1/recommendations?seed_artists='+artist_ids[i]+'&limit=5',
                 headers: { 'Authorization': 'Bearer ' + access_token },
                 json: true
               };
 
               request.get(options_recommended_tracks, function(error, response, body){
                 console.log(body);
+                var j;
+                console.log(body.tracks.length);
+                for (j=0;j<body.tracks.length;j++){
+                  //console.log(body.tracks[j]);
+                  //console.log(body.tracks[j].album);
+                  var album_art=body.tracks[j].album.images[2].url;
+                  //console.log(album_art);
+                  var artist_name=body.tracks[j].artists[0].name;
+                  //console.log(artist_name);
+                  var duration=body.tracks[j].duration_ms;
+                  //console.log(duration);
+                  var track_name=body.tracks[j].name;
+                  //console.log(track_name);
+
+                  var track={
+                    'album_art':album_art,
+                    'artist_name':artist_name,
+                    'duration': duration,
+                    'track_name':track_name
+                  };
+
+                  tracks.push(track);
+
+                  //console.log(track);
+                }
+
+                console.log(tracks);
               });
             }
             
