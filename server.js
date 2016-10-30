@@ -15,7 +15,9 @@ var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 var https = require('https');
-
+var fs = require('fs');
+var http = require('http');
+var playlist = [];
 const pg = require('pg');
 const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/track';
 
@@ -35,6 +37,8 @@ var spotifyAPI = new spotifyWebAPI({
 
 
 var group=[];
+
+var connections=[];
 
 
 /**
@@ -60,6 +64,19 @@ var generateRandomString = function(length) {
 var stateKey = 'spotify_auth_state';
 
 var app = express();
+var socket = require('socket.io');
+
+console.log('Listening on 8888');
+var server=app.listen(8888);
+
+var io=socket.listen(server);
+
+io.on('connection', function(socket){
+  console.log("connect");
+  io.emit("connect");
+  //connections.push(socket);
+  //io.sockets=connections;
+});
 
 app.use(express.static(__dirname + '/public'))
    .use(cookieParser());
@@ -133,13 +150,13 @@ app.get('/callback', function(req, res) {
         // use the access token to access the Spotify Web API
         request.get(options_user, function(error, response, body) {
           //console.log(body);
-          console.log(body.display_name);
-          console.log(body.id);
+          //console.log(body.display_name);
+          //console.log(body.id);
 
           user['display_name']=body.display_name;
           user['user_id']=body.id;
           user['profile_picture']=body.images[0].url;
-          console.log(user);
+          //console.log(user);
         });
 
         var options_top_artists = {
@@ -166,13 +183,13 @@ app.get('/callback', function(req, res) {
 
           //var user=[];
           user['artists']=artist_seeds;
-          console.log(user);
+          //console.log(user);
 
           group.push(user);
 
-          console.log(group);
+          //console.log(group);
 
-          console.log(group.length);
+          //console.log(group.length);
 
             // TODO
           var shuffle = function(tracks) {
@@ -187,7 +204,7 @@ app.get('/callback', function(req, res) {
               var id=artist_seeds[i][1];
               artist_ids.push(id);
             }
-            console.log(artist_ids);
+            //console.log(artist_ids);
 
             //Call API here
             for(i=0;i<artist_ids.length;i++){
@@ -198,9 +215,9 @@ app.get('/callback', function(req, res) {
               };
 
               request.get(options_recommended_tracks, function(error, response, body){
-                console.log(body);
+                //console.log(body);
                 var j;
-                console.log(body.tracks.length);
+                //console.log(body.tracks.length);
                 for (j=0;j<body.tracks.length;j++){
                   //console.log(body.tracks[j]);
                   //console.log(body.tracks[j].album);
@@ -228,7 +245,7 @@ app.get('/callback', function(req, res) {
                   //console.log(track);
                 }
 
-                console.log(tracks);
+                //console.log(tracks);
               });
             }
 
@@ -236,20 +253,21 @@ app.get('/callback', function(req, res) {
             return 1;
           };
 
-          var playlist = [];
+          
 
-          console.log(group.length);
+          //console.log(group.length);
 
           for (var i = 0; i<group.length; i++) {
-
-
             var artist_seeds = group[i].artists;
-            console.log(artist_seeds);
+            //console.log(artist_seeds);
             group[i]['recommendedTracks'] = getRecommendedTracksFromArtists(artist_seeds);
             playlist.push(group[i]['recommendedTracks']);
           }
-
-          shuffle(playlist);
+          io.emit("playlist",playlist);
+          console.log('created playlist');
+          //console.log(playlist);
+          
+          //shuffle(playlist);
         });
 
 
@@ -413,5 +431,3 @@ app.delete('/api/v1/tracks/:track_id', (req, res, next) => {
   });
 });
 
-console.log('Listening on 8888');
-app.listen(8888);

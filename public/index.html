@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css?family=Abel|Open+Sans" rel="stylesheet">
 
     <script src="https://use.fontawesome.com/d9b677c6f0.js"></script>
+        <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+ <script src="js/app.js"></script>
 
     <style type="text/css">
       #login, #loggedin {
@@ -57,6 +59,193 @@
       }
       }
     </style>
+        <style type="text/css">
+      /*#login, #loggedin {
+        display: none;
+      }*/
+
+      h1,h2,h3,h4,h5,h6,th{
+        font-family: 'Abel',sans-serif;
+        color: #1b96fe;
+      }
+      .text-overflow {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 500px;
+      }
+      .container{
+        position: relative;
+        font-family: 'Open Sans',sans-serif;
+      }
+      #login{
+        position:fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+      }
+
+      .btn-login{
+        font-size: 24px;
+        background-color:  #1b96fe;
+        border-color: #1b96fe;
+      }
+
+      .logo{
+        width: 90%;
+      }
+
+      .profile-picture{
+        display: block;
+        width: 200px;
+      }
+      @media only screen and (max-width: 767px) {
+        .btn-login{
+          font-size: 14px;
+        }
+
+        .profile-picture{
+        display: block;
+        width: 150px;
+      }
+
+      /*.user-heading{
+        text-align: center;
+      }
+
+       .user-list{
+        text-align: center;
+      }
+
+      .media-object{
+        width: 64px;
+      }
+
+      .media{
+        position:absolute;
+        left: 50%;
+        margin-top: 64px;
+        transform: translate(-50%, 0%);
+        text-align: center;
+      }
+
+      .media:last-child{
+        margin-top: 128px;
+      }
+
+      #trip-info{
+        position:absolute;
+        left: 50%;
+        margin-top: 216px;
+        transform: translate(-50%, 0%);
+        text-align: center;
+      }
+
+      #playlist{
+        position:absolute;
+        left: 50%;
+        margin-top: 464px;
+        transform: translate(-50%, 0%);
+        text-align: center;
+      }
+
+      #spotify-link{
+        position:absolute;
+        left: 50%;
+        margin-top: 364px;
+        transform: translate(-50%, 0%);
+        text-align: center;
+      }
+
+      .btn-invite{
+        position:absolute;
+        left: 50%;
+        margin-top: 192px;
+        transform: translate(-50%, 0%);
+        text-align: center;
+      }*/
+        .album-image{
+          width: 24px !important;
+        }
+
+        .media-heading{
+          display: none;
+        }
+
+        .table{
+          font-size: 12px;
+        }
+
+        h1{
+          font-size: 30px;
+        }
+
+        h2{
+          font-size: 22px;
+        }
+
+        h4{
+          font-size: 16px;
+        }
+        .well{
+          font-size: 14px !important;
+        }
+      }
+
+      @media only screen and (min-width: 1200px) {
+        .btn-login{
+          font-size: 30px;
+        }
+        .logo{
+        width: 70%;
+      }
+
+
+      .profile-picture{
+        display: block;
+        width: 250px;
+      }
+
+
+      }
+
+      /*#users{
+        background-color: #9ad1fe;
+        color: #fff !important;
+        height: 100%;
+      }
+
+      #users h2{
+        font-family: 'Abel',sans-serif;
+      }*/
+
+      /*.user-list{
+        list-style: none;
+        padding: 0;
+        position: relative;
+        margin: 0;
+        width: 100%;
+      }*/
+
+      .media{
+        padding: 0;
+        display: table-cell;
+      }
+
+      .playlist-table tr td{
+        vertical-align: middle !important;
+      }
+
+      .album-image{
+        width: 48px;
+      }
+
+      .well{
+        font-size: 20px;
+      }
+
+    </style>
   </head>
 
   <body>
@@ -73,6 +262,138 @@ Log in with Spotify</a>
         <div id="oauth">
         </div>
         <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
+
+        <div id="trip">
+
+        <h3><a href="your_road_trip.html"><i class="fa fa-chevron-left" aria-hidden="true"></i> Back</a></h3>
+        <h1 class="text-center">Road Trip Details</h1>
+        <div id="users" class="col-xs-4 col-sm-4 col-md-3 col-lg-2">
+          <h2 class="user-heading">Users</h2>
+            <ul class="media-list user-list">
+              <span ng-repeat="user in trip.groupMembers">
+               <li class="media">
+                <div class="media-left pull-left">
+                  <a href="#">
+                    <!-- <img class="media-object img-circle" src="{{user.profilePicture}}" width="32"> -->
+                  </a>
+                </div>
+                <div class="media-body">
+                  <!-- <h4 class="media-heading">{{user.displayName}} <span ng-show="user.displayName==currentUser.displayName">(you)</span></h4> -->
+                </div>
+              </li><br></span>
+            </ul>
+
+            <button class="btn btn-default btn-invite" data-toggle="modal" data-target="#invite-modal">
+              <i class="fa fa-plus" aria-hidden="true"></i>
+              <span class="hidden-xs">Invite Friends</span>
+            </button>
+
+            <div class="modal fade" id="invite-modal" role="dialog">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h2 class="modal-title" id="invite-modal-label">Invite Friends</h2>
+                  </div>
+
+                  <div class="modal-body">
+                    <h4>Copy the following link:</h4>
+
+                    <!-- <div class="well">http://roadjams.herokuapp.com/join/{{trip.id}}</div> -->
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Copy to Clipboard</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div id="trip-info">
+            <h2><span class="hidden-xs">Trip </span>Info</h2>
+            <!-- <h4>Start:<span class="visible-xs"></span> {{trip.start}}</h4>
+            <h4>End:<span class="visible-xs"></span> {{trip.end}}</h4>
+            <h4>Duration:<span class="visible-xs"></span> {{trip.duration}}</h4> -->
+
+          </div>
+
+          <div id="spotify-link">
+            <h2>
+              Ready<span class="hidden-xs">
+                 to Go</span>?
+            </h2>
+            <button class="btn btn-primary btn-spotify">
+              <i class="fa fa-spotify" aria-hidden="true"></i>
+              <span class="hidden-xs">Open in Spotify</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="col-xs-8 col-sm-8 col-md-9 col-lg-10">
+        <div id="map" class="hidden-xs embed-responsive">
+        <!--TODO: either edit this map to be responsive or get rid of it-->
+          <iframe class="embed-responsive-item" src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d3054377.4075042433!2d-75.43458080146392!3d41.61704314240938!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e6!4m5!1s0x89e3652d0d3d311b%3A0x787cbf240162e8a0!2sBoston%2C+MA!3m2!1d42.3600825!2d-71.0588801!4m5!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew+York%2C+NY!3m2!1d40.712783699999996!2d-74.0059413!5e0!3m2!1sen!2sus!4v1477707308604" width="100%" height="300" scrolling="no"frameborder="0" style="border:0;position:relative;" allowfullscreen>
+          </iframe>
+        </div>
+        <div id="playlist">
+          <h2 class="text-center">Playlist</h2>
+          <table class="table playlist-table">
+            <tr>
+              <th>
+              </th>
+              <th>
+                Title
+              </th>
+              <th>
+                Artist
+              </th>
+              <th class="hidden-xs">
+                Length
+              </th>
+              <th class="hidden-xs">
+
+              </th>
+              <th >
+
+              </th>
+              <th>
+
+              </th>
+            </tr>
+
+            <!-- <tr ng-repeat="track in tracks">
+              <td>
+                <img src="{{track.albumImage}}" class="album-image">
+              </td>
+              <td>
+                {{track.title}}
+              </td>
+              <td>
+                {{track.artist}}
+              </td>
+              <td class="hidden-xs">
+                {{track.length}}
+              </td>
+              <td class="hidden-xs">
+              <span ng-show="track.users_who_listen.length==1">
+                {{track.users_who_listen[0].displayName}} listens to this artist<br></span>
+              <span ng-show="track.users_who_listen.length>1">Group members who listen to this artist:<br>
+                <span ng-repeat="user in track.users_who_listen">&nbsp;{{user.displayName}}<br></span></span>
+                <span ng-show="track.based_on_destination">Based on trip destination</span>
+              </td>
+              <td>
+                <a ng-click="like(track,currentUser)"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><br>{{track.numLikes}}</a>
+              </td>
+              <td>
+                <a ng-click="dislike(track,currentUser)"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><br>{{track.numDislikes}}</a>
+              </td>
+            </tr> -->
+          </table>
+        </div>
+
+      </div>
       </div>
     </div>
 

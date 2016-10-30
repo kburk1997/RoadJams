@@ -6,11 +6,14 @@
  *       2. Build <li>s
  */
 
-var socket = io.connect();
+var socket = io.connect('http://localhost:8888');
 
-socket.on('connect', function() {
-    //console.log(data);
+socket.on('connect', function(socket) {
     console.log('Connected to server');
+    socket.on('playlist', function(playlist){
+      console.log('received playlist!');
+      //console.log(playlist);
+    });
 
 });
 
@@ -18,13 +21,7 @@ socket.on('disconnect', function() {
     console.log('Disconnected from server');
 });
 
-socket.on('playlist', function(playlist){
-    console.log('received playlist!');
-    //console.log(playlist);
-    for(var i=0; i<playlist.length;i++){
-        console.log(playlist[i]);
-    }
-});
+
 
 var callback = function(tracks) {
 
