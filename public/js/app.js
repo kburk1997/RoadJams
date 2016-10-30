@@ -21,7 +21,7 @@ socket.on('disconnect', function() {
 socket.on('playlist', function(tracks){
     console.log("a client received a playlist");
     var table = $('.playlist-table');
-    console.log(table);
+    //console.log(table);
     // for each in data track in tracks
     for (var i=0; i<tracks.length; i++) {
         //console.log(tracks[i]);
@@ -30,34 +30,43 @@ socket.on('playlist', function(tracks){
             //console.log(tracks[i][j])
             // Build tr
             var tr = $('<tr></tr>');
-            var art_img = $('<img>');
+
+            /*var art_img = $('<img>');
             art_img.src = tracks[i][j]['album_art'];
-
+            console.log(tr);
+            console.log(art_img);
             var td_art = $('<td></td>');
+            console.log(td_art);
             td_art.append(art_img);
-            tr.append(td_art);
+            console.log(td_art);*/
+            tr.append("<td><img src=\""+tracks[i][j]['album_art']+"\"></td>");
+            //console.log(tr);
+            tr.append('<td>'+tracks[i][j].track_name+'</td>');
+            //console.log(tr);
+            tr.append('<td>'+tracks[i][j].artist_name+'</td>');
 
-            var td_track = $('<td></td>');
-            td_track.text = tracks[i][j].track_name;
-            tr.append(td_track);
-
-            var td_artist = $('<td></td>');
-            td_artist.text = tracks[i][j].artist_name;
-            tr.append(td_artist);
-
-            var td_duration = $('<td></td>');
-            td_duration.text = tracks[i][j].duration;
-            tr.append(td_duration);
-
+            //td_duration.text = tracks[i][j].duration;
+            var seconds=tracks[i][j].duration/1000;
+            console.log();
+            console.log();
+            console.log(seconds);
+            var minutes=Math.floor(seconds/60);
+            var remainder=Math.floor(seconds %60);
+            if(Math.floor(remainder/10)==0){
+                remainder="0"+remainder;
+            }
+            tr.append('<td>'+minutes+':'+remainder+'</td>');
+            //console.log(tr);
             var td_like_button  = $('<td></td>');
             td_like_button.text = tracks[i][j].numLikes;
             tr.append(td_like_button);
-
+            //console.log(tr);
             var td_dislike_button  = $('<td></td>');
             td_dislike_button.text = tracks[i][j].numDislikes;
             tr.append(td_dislike_button);
-
+            //console.log(tr);
             table.append(tr);
+            console.log(table);
         }
         
     }
